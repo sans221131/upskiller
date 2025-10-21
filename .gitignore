@@ -43,3 +43,27 @@ next-env.d.ts
 .dev.vars*
 !.dev.vars.example
 !.env.example
+
+# lockfiles
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# IDE
+.vscode/
+.idea/
+
+# logs
+logs/
+npm-debug.log*
+pnpm-debug.log*
+
+# tailwind cache
+.tailwindcache
+
+# build artifacts
+dist/
+build/
+
+# Next image cache
+.next/cache/images
