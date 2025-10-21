@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FormData } from '../LeadFormWizard';
 
 interface StepRecommendationsProps {
@@ -10,26 +10,89 @@ interface StepRecommendationsProps {
   onBack: () => void;
 }
 
-interface Program {
+interface ProgramMatch {
   id: number;
   title: string;
-  institutionName: string;
+  institutionName: string | null;
+  institutionSlug: string | null;
+  institutionLocation: string | null;
   degreeType: string;
-  durationMonths: number;
-  totalFee: number;
-  deliveryMode: string;
+  durationMonths: number | null;
+  totalFee: number | null;
+  deliveryMode: string | null;
+  highlights: string | null;
+  outcomes: string | null;
   fitScore: number;
-  highlights: string;
 }
 
+const formatCurrency = (value: number | null) => {
+  if (!value) return '—';
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  }).format(value);
+};
+
+const formatDuration = (months: number | null) => {
+  if (!months) return '—';
+  const years = months / 12;
+  if (Number.isInteger(years)) return `${months} months · ${years} ${years === 1 ? 'year' : 'years'}`;
+  return `${months} months · ${years.toFixed(1)} years`;
+};
+
+const modeLabel = (mode: string | null) => {
+  if (!mode) return '—';
+  switch (mode) {
+    case 'online':
+      return 'Fully Online';
+    case 'blended':
+      return 'Blended';
+    case 'weekend':
+      return 'Weekend Format';
+    case 'on-campus':
+      return 'On Campus';
+    default:
+      return mode;
+  }
+};
+
+const cleanBulletPoints = (highlights?: string | null, outcomes?: string | null) => {
+  const source = `${highlights ?? ''}\n${outcomes ?? ''}`
+    .replace(/UGC-entitled Online Degrees?\.*/gi, '')
+    .trim();
+
+  if (!source) return [];
+
+  const pieces = source
+    .split(/\n|•|\u2022|\u2023|\*|(?<=\.)\s+/g)
+    .map((piece) => piece.trim())
+    .filter((piece) => piece.length > 0)
+    .map((piece) => piece.replace(/^[-–•\d.\s]+/, '').trim())
+    .filter((piece) => piece.length >= 12)
+    .map((piece) => (piece.length > 140 ? `${piece.slice(0, 137).trimEnd()}…` : piece));
+
+  const unique: string[] = [];
+  for (const item of pieces) {
+    if (!unique.some((existing) => existing.toLowerCase() === item.toLowerCase())) {
+      unique.push(item);
+    }
+    if (unique.length === 3) break;
+  }
+
+  return unique;
+};
+
 export default function StepRecommendations({ data, updateData, onNext, onBack }: StepRecommendationsProps) {
-  const [programs, setPrograms] = useState<Program[]>([]);
+  const [programs, setPrograms] = useState<ProgramMatch[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<number[]>(data.selectedPrograms || []);
 
   useEffect(() => {
-    // Fetch matched programs from API
-    const fetchPrograms = async () => {
+    const fetchMatches = async () => {
+      setLoading(true);
+      setError(null);
       try {
         const response = await fetch('/api/programs/match', {
           method: 'POST',
@@ -41,47 +104,32 @@ export default function StepRecommendations({ data, updateData, onNext, onBack }
             specialisation: data.specialisationInterest,
           }),
         });
-        const result = await response.json();
-        setPrograms(result.programs || []);
-      } catch (error) {
-        console.error('Failed to fetch programs:', error);
-        // Mock data for demo
-        setPrograms([
-          {
-            id: 1,
-            title: 'MBA in Business Analytics',
-            institutionName: 'NMIMS Global',
-            degreeType: 'MBA',
-            durationMonths: 24,
-            totalFee: 385000,
-            deliveryMode: 'online',
-            fitScore: 95,
-            highlights: 'UGC Approved • NAAC A+ • Industry Projects',
-          },
-          {
-            id: 2,
-            title: 'Executive MBA',
-            institutionName: 'Manipal University',
-            degreeType: 'Executive MBA',
-            durationMonths: 18,
-            totalFee: 250000,
-            deliveryMode: 'blended',
-            fitScore: 88,
-            highlights: 'Weekend Classes • Global Faculty • Fortune 500 Projects',
-          },
-        ]);
+
+        if (!response.ok) {
+          const payload = (await response.json().catch(() => ({}))) as { error?: string };
+          throw new Error(payload.error || 'Unable to load recommendations');
+        }
+
+        const payload = (await response.json()) as { programs: ProgramMatch[] };
+        setPrograms(payload.programs ?? []);
+      } catch (fetchError) {
+        console.error(fetchError);
+        setError(fetchError instanceof Error ? fetchError.message : 'Unable to load recommendations');
+        setPrograms([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPrograms();
-  }, [data]);
+    fetchMatches();
+  }, [data.degreeInterest, data.preferredMode, data.budgetRange, data.specialisationInterest]);
+
+  useEffect(() => {
+    setSelectedIds(data.selectedPrograms || []);
+  }, [data.selectedPrograms]);
 
   const toggleProgram = (id: number) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
-    );
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((current) => current !== id) : [...prev, id]));
   };
 
   const handleContinue = () => {
@@ -89,121 +137,158 @@ export default function StepRecommendations({ data, updateData, onNext, onBack }
     onNext();
   };
 
-  const formatFee = (fee: number) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0,
-    }).format(fee);
-  };
+  const summaryCopy = useMemo(() => {
+    if (loading) return 'We’re scoring programs against your answers…';
+    if (error) return 'We couldn’t load matches just now. You can still continue — our counsellors will curate options for you.';
+    if (programs.length === 0) return 'We didn’t find an exact match yet. Pick “Continue” and we’ll shortlist fresh options with our counsellors.';
+    return `Based on your inputs, here are ${programs.length} programs to review. Select the ones that feel promising — you can pick more than one.`;
+  }, [loading, error, programs.length]);
 
   if (loading) {
     return (
-      <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
-        <p className="text-slate-600">Finding perfect matches for you...</p>
+      <div className="py-16 text-center">
+        <div className="mx-auto mb-6 h-12 w-12 animate-spin rounded-full border-2 border-teal-500 border-b-transparent" />
+        <p className="text-sm font-medium uppercase tracking-[0.28em] text-slate-400">matching in progress</p>
+        <p className="mt-3 text-base text-slate-600">We’re analysing degree, format, and ROI signals for you.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-3xl font-bold text-slate-900 mb-2">
-          Your Personalized Program Matches
-        </h2>
-        <p className="text-slate-700 text-lg">
-          Based on your profile, here are {programs.length} programs perfectly matched to your goals and budget.
+    <div className="space-y-10">
+      <header className="space-y-3">
+        <p className="text-[0.75rem] font-semibold uppercase tracking-[0.32em] text-slate-400">
+          Step 4 · Preview matches
         </p>
-      </div>
+        <h2 className="text-3xl font-semibold leading-tight text-slate-900">
+          Choose programs you’d like guidance on
+        </h2>
+        <p className="text-base leading-relaxed text-slate-600">{summaryCopy}</p>
+      </header>
 
-      {/* Program Cards */}
-      <div className="space-y-4">
-        {programs.map((program) => (
-          <div
-            key={program.id}
-            onClick={() => toggleProgram(program.id)}
-            className={`p-6 rounded-2xl border-2 cursor-pointer transition-all ${
-              selectedIds.includes(program.id)
-                ? 'border-teal-500 bg-teal-50'
-                : 'border-slate-200 hover:border-teal-300'
-            }`}
-          >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <h3 className="text-xl font-bold text-slate-900">{program.title}</h3>
-                  <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold">
-                    {program.fitScore}% Match
-                  </span>
-                </div>
-                <p className="text-slate-600 font-medium">{program.institutionName}</p>
-              </div>
-              <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                selectedIds.includes(program.id)
-                  ? 'border-teal-500 bg-teal-500'
-                  : 'border-slate-300'
-              }`}>
-                {selectedIds.includes(program.id) && (
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                )}
-              </div>
-            </div>
-
-            <p className="text-sm text-slate-600 mb-4">{program.highlights}</p>
-
-            <div className="flex flex-wrap gap-4 text-sm">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-slate-700">Duration:</span>
-                <span className="text-slate-600">{program.durationMonths} months</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-slate-700">Mode:</span>
-                <span className="text-slate-600 capitalize">{program.deliveryMode}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-slate-700">Fee:</span>
-                <span className="text-teal-600 font-bold">{formatFee(program.totalFee)}</span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {selectedIds.length > 0 && (
-        <div className="bg-teal-50 border-2 border-teal-200 rounded-xl p-4">
-          <div className="text-sm font-semibold text-teal-900 mb-1">
-            ✓ {selectedIds.length} Program{selectedIds.length > 1 ? 's' : ''} Selected
-          </div>
-          <div className="text-sm text-teal-700">
-            Our counselors will reach out within 24 hours with detailed information about your selected programs.
-          </div>
+      {error ? (
+        <div className="rounded-2xl border border-rose-100 bg-rose-50/60 p-6 text-sm text-rose-700">
+          {error}
         </div>
-      )}
+      ) : null}
 
-      {/* Navigation Buttons */}
-      <div className="flex gap-4">
+      {programs.length > 0 ? (
+        <div className="space-y-5">
+          {programs.map((program) => {
+            const isSelected = selectedIds.includes(program.id);
+            const bulletPoints = cleanBulletPoints(program.highlights, program.outcomes);
+
+            return (
+              <article
+                key={program.id}
+                className={`relative flex flex-col gap-6 rounded-3xl border px-6 py-6 transition-all ${
+                  isSelected ? 'border-teal-500 bg-teal-50 shadow-sm' : 'border-slate-200 hover:border-teal-300 hover:bg-slate-50'
+                }`}
+              >
+                <span
+                  aria-hidden
+                  className={`absolute left-0 top-4 bottom-4 w-1.5 rounded-full ${
+                    isSelected ? 'bg-teal-500' : 'bg-teal-200'
+                  }`}
+                />
+                <div className="pl-3 sm:pl-4">
+                  <button
+                    type="button"
+                    className="flex items-start justify-between gap-4 text-left"
+                    onClick={() => toggleProgram(program.id)}
+                  >
+                  <div className="space-y-2">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="rounded-full bg-[hsl(173,70%,94%)] px-3 py-1 text-[0.65rem] font-semibold tracking-[0.18em] text-[hsl(172,60%,32%)]">
+                        {program.degreeType}
+                      </span>
+                      <span className="rounded-full bg-[hsl(204,80%,96%)] px-3 py-1 text-[0.65rem] font-semibold tracking-[0.18em] text-[hsl(205,50%,40%)]">
+                        {program.fitScore}% fit
+                      </span>
+                    </div>
+                    <h3 className="text-[1.5rem] font-semibold leading-tight text-slate-900">{program.title}</h3>
+                    <p className="text-xs uppercase tracking-[0.26em] text-slate-500">
+                      {program.institutionName ?? 'Partner Institution'}
+                      {program.institutionLocation ? ` • ${program.institutionLocation}` : ''}
+                    </p>
+                  </div>
+
+                  <span
+                    className={`mt-2 inline-flex h-6 w-6 items-center justify-center rounded-full border transition-colors ${
+                      isSelected ? 'border-teal-500 bg-teal-500 text-white' : 'border-slate-300 text-transparent'
+                    }`}
+                    aria-hidden
+                  >
+                    ✓
+                  </span>
+                </button>
+
+                <div className="grid gap-4 text-sm sm:grid-cols-3">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[0.65rem] font-semibold uppercase tracking-[0.26em] text-slate-400">
+                      Duration
+                    </span>
+                    <span className="text-sm font-medium text-slate-900">{formatDuration(program.durationMonths)}</span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[0.65rem] font-semibold uppercase tracking-[0.26em] text-slate-400">
+                      Delivery format
+                    </span>
+                    <span className="text-sm font-medium text-slate-900">{modeLabel(program.deliveryMode)}</span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[0.65rem] font-semibold uppercase tracking-[0.26em] text-slate-400">
+                      Indicative fee
+                    </span>
+                    <span className="text-sm font-semibold text-slate-900">{formatCurrency(program.totalFee)}</span>
+                  </div>
+                </div>
+
+                    {bulletPoints.length > 0 && (
+                      <ul className="space-y-2 text-sm leading-relaxed text-slate-600">
+                        {bulletPoints.map((point, index) => (
+                          <li key={index} className="flex gap-3">
+                            <span className="mt-[6px] inline-block h-1.5 w-1.5 flex-shrink-0 rounded-full bg-teal-500" />
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      ) : null}
+
+      <div className="flex flex-col gap-3 rounded-2xl border border-teal-100 bg-teal-50/70 p-5 text-sm text-teal-700">
+        <p className="font-semibold text-teal-800">What happens after you choose?</p>
+        <ul className="space-y-2 text-sm leading-relaxed">
+          <li>• A mentor will call with deeper batch details, placements, and scholarships for your picks.</li>
+          <li>• We can add more programs once we speak, so pick what looks interesting now.</li>
+        </ul>
+      </div>
+
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
         <button
           type="button"
           onClick={onBack}
-          className="px-8 py-4 border-2 border-slate-300 rounded-full font-semibold text-slate-700 hover:border-teal-500 transition-all"
+          className="w-full rounded-full border border-slate-300 px-6 py-4 text-sm font-semibold text-slate-700 transition-all hover:border-teal-400 hover:text-teal-700 sm:w-auto"
         >
-          ← Back
+          Back
         </button>
         <button
           type="button"
           onClick={handleContinue}
-          disabled={selectedIds.length === 0}
-          className="flex-1 bg-teal-600 hover:bg-teal-700 text-white py-4 rounded-full font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          disabled={programs.length > 0 && selectedIds.length === 0}
+          className="w-full rounded-full bg-slate-900 px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
-          Continue to Contact Details →
+          {programs.length > 0 ? 'Continue to Contact' : 'Continue — we’ll curate more' }
         </button>
       </div>
 
-      <p className="text-center text-sm text-slate-500">
-        You can select multiple programs to compare
+      <p className="text-center text-xs uppercase tracking-[0.28em] text-slate-400">
+        {programs.length > 0 ? 'you can shortlist up to six programs' : 'our counsellors will add more options later'}
       </p>
     </div>
   );
