@@ -9,174 +9,177 @@ interface StepEligibilityProps {
   onBack: () => void;
 }
 
+const QUALIFICATIONS = [
+  "Bachelor's Degree (Any Stream)",
+  'Engineering Degree',
+  'Commerce/BBA',
+  'Science Degree',
+  'Arts/Humanities',
+  'Diploma (3 years)',
+  'Other',
+] as const;
+
+const BUDGET_RANGES = [
+  '< ₹1 Lakh',
+  '₹1-2 Lakhs',
+  '₹2-4 Lakhs',
+  '₹4-6 Lakhs',
+  '₹6-10 Lakhs',
+  '> ₹10 Lakhs',
+  'Flexible',
+] as const;
+
+const CATEGORIES = ['General', 'OBC', 'SC', 'ST', 'EWS', 'PWD', 'Prefer not to say'] as const;
+
 export default function StepEligibility({ data, updateData, onNext, onBack }: StepEligibilityProps) {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     onNext();
   };
 
-  const qualifications = [
-    'Bachelor\'s Degree (Any Stream)',
-    'Engineering Degree',
-    'Commerce/BBA',
-    'Science Degree',
-    'Arts/Humanities',
-    'Diploma (3 years)',
-    'Other'
-  ];
-
-  const budgetRanges = [
-    '< ₹1 Lakh',
-    '₹1-2 Lakhs',
-    '₹2-4 Lakhs',
-    '₹4-6 Lakhs',
-    '₹6-10 Lakhs',
-    '> ₹10 Lakhs',
-    'Flexible'
-  ];
-
-  const categories = [
-    'General',
-    'OBC',
-    'SC',
-    'ST',
-    'EWS',
-    'PWD',
-    'Prefer not to say'
-  ];
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      <div>
-        <h2 className="text-3xl font-bold text-slate-900 mb-2">
-          Tell us about your educational background
-        </h2>
-        <p className="text-slate-700 text-lg">
-          This helps us match you with programs you're eligible for.
+    <form onSubmit={handleSubmit} className="space-y-10">
+      <header className="space-y-3">
+        <p className="text-[0.75rem] font-semibold uppercase tracking-[0.32em] text-slate-400">
+          Step 3 · Eligibility signals
         </p>
-      </div>
+        <h2 className="text-3xl font-semibold leading-tight text-slate-900">
+          Share your academic background and investment comfort
+        </h2>
+        <p className="text-base leading-relaxed text-slate-600">
+          We use this to surface programs where you already qualify and to personalise scholarships or instalment options.
+        </p>
+      </header>
 
-      {/* Highest Qualification */}
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold text-slate-800">
-          Highest Qualification <span className="text-red-500">*</span>
-        </label>
+      <section className="space-y-4">
+        <h3 className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">
+          Highest qualification <span className="inline text-rose-500">*</span>
+        </h3>
         <select
           value={data.highestQualification}
-          onChange={(e) => updateData({ highestQualification: e.target.value })}
-          className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-teal-500 focus:outline-none"
+          onChange={(event) => updateData({ highestQualification: event.target.value })}
+          className="w-full rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
           required
         >
-          <option value="">Select your qualification</option>
-          {qualifications.map((qual) => (
-            <option key={qual} value={qual}>{qual}</option>
+          <option value="">Select the closest option…</option>
+          {QUALIFICATIONS.map((qualification) => (
+            <option key={qualification} value={qualification}>
+              {qualification}
+            </option>
           ))}
         </select>
-      </div>
+      </section>
 
-      {/* Last Score */}
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold text-slate-800">
-          Percentage/CGPA in Last Degree
-        </label>
-        <input
-          type="number"
-          step="0.01"
-          min="0"
-          max="100"
-          value={data.lastScorePercent}
-          onChange={(e) => updateData({ lastScorePercent: e.target.value })}
-          className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-teal-500 focus:outline-none"
-          placeholder="e.g., 75.5 or 7.5 CGPA"
-        />
-        <p className="text-xs text-slate-500">Enter percentage (e.g., 75) or CGPA (e.g., 7.5)</p>
-      </div>
-
-      {/* Category */}
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold text-slate-800">
-          Category
-        </label>
-        <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              onClick={() => updateData({ category: cat })}
-              className={`px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                data.category === cat
-                  ? 'border-teal-500 bg-teal-50 text-teal-700'
-                  : 'border-slate-200 hover:border-teal-300 text-slate-700'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+      <section className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h3 className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">Academic trend</h3>
+          <span className="text-xs font-medium uppercase tracking-[0.25em] text-slate-400">optional</span>
         </div>
-      </div>
-
-      {/* Budget Range */}
-      <div className="space-y-3">
-        <label className="block text-sm font-semibold text-slate-800">
-          Investment Budget (Total Program Fee) <span className="text-red-500">*</span>
+        <label className="flex flex-col gap-2">
+          <span className="text-sm font-medium text-slate-700">Percentage / CGPA in your latest degree</span>
+          <input
+            type="number"
+            step="0.01"
+            min="0"
+            max="100"
+            value={data.lastScorePercent}
+            onChange={(event) => updateData({ lastScorePercent: event.target.value })}
+            className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+            placeholder="e.g. 75 or 7.5"
+          />
+          <span className="text-xs text-slate-500">Enter the value in percentage or CGPA — whichever is easier.</span>
         </label>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {budgetRanges.map((budget) => (
-            <button
-              key={budget}
-              type="button"
-              onClick={() => updateData({ budgetRange: budget })}
-              className={`px-4 py-3 rounded-xl border-2 font-medium transition-all ${
-                data.budgetRange === budget
-                  ? 'border-teal-500 bg-teal-50 text-teal-700'
-                  : 'border-slate-200 hover:border-teal-300 text-slate-700'
-              }`}
-            >
-              {budget}
-            </button>
-          ))}
-        </div>
-      </div>
+      </section>
 
-      {/* EMI Interest */}
-      <div className="space-y-2">
-        <label className="flex items-center gap-3 p-4 border-2 border-slate-200 rounded-xl hover:border-teal-300 cursor-pointer transition-all">
+      <section className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h3 className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">Social category</h3>
+          <span className="text-xs font-medium uppercase tracking-[0.25em] text-slate-400">optional</span>
+        </div>
+        <div className="grid grid-cols-3 gap-3 md:grid-cols-4">
+          {CATEGORIES.map((category) => {
+            const isActive = data.category === category;
+            return (
+              <button
+                key={category}
+                type="button"
+                onClick={() => updateData({ category })}
+                className={`rounded-xl border px-4 py-3 text-sm font-medium transition-all ${
+                  isActive
+                    ? 'border-teal-500 bg-teal-50 text-teal-700 shadow-sm'
+                    : 'border-slate-200 text-slate-600 hover:border-teal-300 hover:text-teal-700'
+                }`}
+              >
+                {category}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <h3 className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">
+          Comfortable investment range <span className="inline text-rose-500">*</span>
+        </h3>
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+          {BUDGET_RANGES.map((budget) => {
+            const isActive = data.budgetRange === budget;
+            return (
+              <button
+                key={budget}
+                type="button"
+                onClick={() => updateData({ budgetRange: budget })}
+                className={`rounded-xl border px-4 py-3 text-sm font-medium transition-all ${
+                  isActive
+                    ? 'border-teal-500 bg-teal-50 text-teal-700 shadow-sm'
+                    : 'border-slate-200 text-slate-600 hover:border-teal-300 hover:text-teal-700'
+                }`}
+              >
+                {budget}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section>
+        <label className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4 transition-all hover:border-teal-300">
           <input
             type="checkbox"
             checked={data.wantsEmi}
-            onChange={(e) => updateData({ wantsEmi: e.target.checked })}
-            className="w-5 h-5 text-teal-600 rounded focus:ring-teal-500"
+            onChange={(event) => updateData({ wantsEmi: event.target.checked })}
+            className="mt-1 h-5 w-5 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
           />
-          <div>
-            <div className="font-semibold text-slate-900">I'm interested in EMI options</div>
-            <div className="text-sm text-slate-600">We'll show you flexible payment plans with our partner lenders</div>
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-slate-900">Show me EMI or pay-later options</p>
+            <p className="text-sm leading-snug text-slate-600">
+              We’ll surface monthly affordability scenarios and lender partners you can explore.
+            </p>
           </div>
         </label>
-      </div>
+      </section>
 
-      {/* Info Box */}
-      <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4">
-        <div className="text-sm font-semibold text-emerald-900 mb-1">✓ SCHOLARSHIP ELIGIBILITY</div>
-        <div className="text-sm text-emerald-700">
-          Based on your profile, we'll automatically check scholarship opportunities from institutions and recommend the best fit.
-        </div>
-      </div>
+      <aside className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-5">
+        <p className="text-sm font-semibold text-emerald-800">Scholarship & aid match</p>
+        <p className="mt-1 text-sm leading-relaxed text-emerald-700">
+          With these details we auto-check institutional scholarships, alumni grants, and corporate sponsorship programs you can apply for.
+        </p>
+      </aside>
 
-      {/* Navigation Buttons */}
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
         <button
           type="button"
           onClick={onBack}
-          className="px-8 py-4 border-2 border-slate-300 rounded-full font-semibold text-slate-700 hover:border-teal-500 transition-all"
+          className="w-full rounded-full border border-slate-300 px-6 py-4 text-sm font-semibold text-slate-700 transition-all hover:border-teal-400 hover:text-teal-700 sm:w-auto"
         >
-          ← Back
+          Back
         </button>
         <button
           type="submit"
           disabled={!data.highestQualification || !data.budgetRange}
-          className="flex-1 bg-teal-600 hover:bg-teal-700 text-white py-4 rounded-full font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="w-full rounded-full bg-slate-900 px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
-          See Recommendations →
+          See Recommendations
         </button>
       </div>
     </form>

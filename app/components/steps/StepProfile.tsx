@@ -8,181 +8,207 @@ interface StepProfileProps {
   onNext: () => void;
 }
 
+const EMPLOYMENT_STATUSES = [
+  { value: 'Working professional', label: 'Working professional', icon: '💼', desc: 'Full-time or part-time employee' },
+  { value: 'Student', label: 'Student', icon: '🎓', desc: 'Final or pre-final year of study' },
+  { value: 'Entrepreneur', label: 'Entrepreneur / Consultant', icon: '🚀', desc: 'Building a venture or consulting' },
+  { value: 'On break', label: 'On a break & exploring', icon: '🔄', desc: 'Planning a focused comeback' },
+] as const;
+
+const SALARY_BANDS = [
+  '< ₹3 LPA',
+  '₹3-5 LPA',
+  '₹5-8 LPA',
+  '₹8-12 LPA',
+  '₹12-18 LPA',
+  '₹18-25 LPA',
+  '> ₹25 LPA',
+  'Prefer not to say',
+] as const;
+
+const GOALS = [
+  { value: 'Career switch', label: 'Career switch', icon: '🔄' },
+  { value: 'Promotion', label: 'Get promoted faster', icon: '📈' },
+  { value: 'Entrepreneurship', label: 'Start my business', icon: '🚀' },
+  { value: 'Skill upgrade', label: 'Build new skills', icon: '🎯' },
+  { value: 'Salary hike', label: 'Increase salary', icon: '💰' },
+  { value: 'Network', label: 'Grow my network', icon: '🤝' },
+] as const;
+
+const GENDERS = ['Male', 'Female', 'Other', 'Prefer not to say'] as const;
+
 export default function StepProfile({ data, updateData, onNext }: StepProfileProps) {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     onNext();
   };
 
-  const employmentStatuses = [
-    { value: 'Working professional', label: 'Working professional', icon: '💼', desc: 'Full-time or part-time employee' },
-    { value: 'Student', label: 'Student', icon: '🎓', desc: 'Final or pre-final year' },
-    { value: 'Entrepreneur', label: 'Entrepreneur / Consultant', icon: '🚀', desc: 'Building your own venture' },
-    { value: 'On break', label: 'On a break & exploring', icon: '🔄', desc: 'Planning a focused comeback' },
-  ];
-
-  const salaryBands = [
-    '< ₹3 LPA',
-    '₹3-5 LPA',
-    '₹5-8 LPA',
-    '₹8-12 LPA',
-    '₹12-18 LPA',
-    '₹18-25 LPA',
-    '> ₹25 LPA',
-    'Prefer not to say'
-  ];
-
-  const goals = [
-    { value: 'Career switch', label: 'Career switch', icon: '🔄' },
-    { value: 'Promotion', label: 'Get promoted faster', icon: '📈' },
-    { value: 'Entrepreneurship', label: 'Start my business', icon: '🚀' },
-    { value: 'Skill upgrade', label: 'Learn new skills', icon: '🎯' },
-    { value: 'Salary hike', label: 'Increase salary', icon: '💰' },
-    { value: 'Network', label: 'Build network', icon: '🤝' },
-  ];
+  const requireExperience = data.employmentStatus && data.employmentStatus !== 'Student';
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      <div>
-        <h2 className="text-3xl font-bold text-slate-900 mb-2">
-          Where are you in your professional journey?
-        </h2>
-        <p className="text-slate-700 text-lg">
-          We tailor recommendations based on your current context, so pick the one closest to you.
+    <form onSubmit={handleSubmit} className="space-y-10">
+      <header className="space-y-3">
+        <p className="text-[0.75rem] font-semibold uppercase tracking-[0.32em] text-slate-400">
+          Step 1 · Profile snapshot
         </p>
-      </div>
+        <h2 className="text-3xl font-semibold leading-tight text-slate-900">
+          Let’s understand where you’re starting from
+        </h2>
+        <p className="text-base leading-relaxed text-slate-600">
+          Your current context helps us prioritise mentors, programs, and financing guidance that actually fit your reality.
+        </p>
+      </header>
 
-      {/* Employment Status */}
-      <div className="space-y-3">
-        <label className="block text-sm font-semibold text-slate-800">
-          Current Status <span className="text-red-500">*</span>
-        </label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {employmentStatuses.map((status) => (
-            <button
-              key={status.value}
-              type="button"
-              onClick={() => updateData({ employmentStatus: status.value })}
-              className={`p-4 rounded-xl border-2 text-left transition-all ${
-                data.employmentStatus === status.value
-                  ? 'border-teal-500 bg-teal-50'
-                  : 'border-slate-200 hover:border-teal-300'
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <span className="text-2xl">{status.icon}</span>
-                <div>
-                  <div className="font-semibold text-slate-900">{status.label}</div>
-                  <div className="text-sm text-slate-700">{status.desc}</div>
+      <section className="space-y-4">
+        <h3 className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">
+          Current status <span className="inline text-rose-500">*</span>
+        </h3>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {EMPLOYMENT_STATUSES.map((status) => {
+            const isActive = data.employmentStatus === status.value;
+            return (
+              <button
+                key={status.value}
+                type="button"
+                onClick={() => updateData({ employmentStatus: status.value })}
+                className={`rounded-2xl border px-5 py-4 text-left transition-all ${
+                  isActive
+                    ? 'border-teal-500 bg-teal-50 shadow-sm'
+                    : 'border-slate-200 hover:border-teal-300 hover:bg-teal-50/40'
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl leading-none">{status.icon}</span>
+                  <div className="space-y-1">
+                    <p className="text-base font-semibold text-slate-900">{status.label}</p>
+                    <p className="text-sm leading-snug text-slate-600">{status.desc}</p>
+                  </div>
                 </div>
-              </div>
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
-      </div>
+      </section>
 
-      {/* Experience Years */}
-      {data.employmentStatus && data.employmentStatus !== 'Student' && (
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-slate-800">
-            Years of Work Experience <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="number"
-            step="0.5"
-            min="0"
-            max="40"
-            value={data.experienceYears}
-            onChange={(e) => updateData({ experienceYears: e.target.value })}
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-teal-500 focus:outline-none"
-            placeholder="e.g., 3.5"
-            required
-          />
-        </div>
+      {requireExperience && (
+        <section className="space-y-6">
+          <h3 className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">
+            Experience & compensation
+          </h3>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <label className="flex flex-col gap-2">
+              <span className="text-sm font-medium text-slate-700">
+                Total work experience <span className="text-rose-500">*</span>
+              </span>
+              <input
+                type="number"
+                step="0.5"
+                min="0"
+                max="40"
+                value={data.experienceYears}
+                onChange={(event) => updateData({ experienceYears: event.target.value })}
+                className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+                placeholder="e.g. 3.5"
+                required
+              />
+            </label>
+
+            {data.employmentStatus === 'Working professional' && (
+              <label className="flex flex-col gap-2">
+                <span className="text-sm font-medium text-slate-700">Current salary band</span>
+                <select
+                  value={data.salaryBand}
+                  onChange={(event) => updateData({ salaryBand: event.target.value })}
+                  className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+                >
+                  <option value="">Choose a range…</option>
+                  {SALARY_BANDS.map((band) => (
+                    <option key={band} value={band}>
+                      {band}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+          </div>
+        </section>
       )}
 
-      {/* Salary Band */}
-      {data.employmentStatus === 'Working professional' && (
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-slate-800">
-            Current Salary Range
-          </label>
-          <select
-            value={data.salaryBand}
-            onChange={(e) => updateData({ salaryBand: e.target.value })}
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-teal-500 focus:outline-none"
-          >
-            <option value="">Select salary range</option>
-            {salaryBands.map((band) => (
-              <option key={band} value={band}>{band}</option>
-            ))}
-          </select>
+      <section className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h3 className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">Personal profile</h3>
+          <span className="text-xs font-medium uppercase tracking-[0.25em] text-slate-400">optional</span>
         </div>
-      )}
+        <div className="flex flex-wrap gap-3">
+          {GENDERS.map((gender) => {
+            const isActive = data.gender === gender;
+            return (
+              <button
+                key={gender}
+                type="button"
+                onClick={() => updateData({ gender })}
+                className={`rounded-full px-5 py-2 text-sm font-semibold transition-all ${
+                  isActive
+                    ? 'bg-teal-100 text-teal-700'
+                    : 'border border-slate-200 text-slate-600 hover:border-teal-300 hover:text-teal-700'
+                }`}
+              >
+                {gender}
+              </button>
+            );
+          })}
+        </div>
+      </section>
 
-      {/* Gender */}
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold text-slate-800">
-          Gender
-        </label>
-        <div className="flex gap-3">
-          {['Male', 'Female', 'Other', 'Prefer not to say'].map((gender) => (
-            <button
-              key={gender}
-              type="button"
-              onClick={() => updateData({ gender })}
-              className={`px-6 py-3 rounded-full border-2 transition-all ${
-                data.gender === gender
-                  ? 'border-teal-500 bg-teal-50 text-teal-700'
-                  : 'border-slate-200 hover:border-teal-300'
-              }`}
-            >
-              {gender}
-            </button>
-          ))}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">
+            Primary career goal
+          </h3>
+          <span className="text-xs font-semibold text-rose-500">required</span>
         </div>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+          {GOALS.map((goal) => {
+            const isActive = data.goal === goal.value;
+            return (
+              <button
+                key={goal.value}
+                type="button"
+                onClick={() => updateData({ goal: goal.value })}
+                className={`rounded-2xl border px-4 py-5 text-center transition-all ${
+                  isActive
+                    ? 'border-teal-500 bg-teal-50 shadow-sm'
+                    : 'border-slate-200 hover:border-teal-300 hover:bg-teal-50/40'
+                }`}
+              >
+                <span className="mb-3 block text-3xl leading-none">{goal.icon}</span>
+                <span className="text-sm font-semibold text-slate-900">{goal.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <aside className="rounded-2xl border border-teal-100 bg-teal-50/70 p-5">
+        <p className="text-sm font-semibold text-teal-800">What you unlock next</p>
+        <p className="mt-1 text-sm leading-relaxed text-teal-700">
+          An alumni mentor from your background connects within 24 hours, followed by tailored program matches and financing guidance curated for your situation.
+        </p>
+      </aside>
+
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+        <button
+          type="submit"
+          disabled={
+            !data.employmentStatus ||
+            !data.goal ||
+            (requireExperience && !data.experienceYears)
+          }
+          className="w-full rounded-full bg-slate-900 px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+        >
+          Continue to Preferences
+        </button>
       </div>
-
-      {/* Primary Goal */}
-      <div className="space-y-3">
-        <label className="block text-sm font-semibold text-slate-800">
-          What's your primary goal? <span className="text-red-500">*</span>
-        </label>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {goals.map((goal) => (
-            <button
-              key={goal.value}
-              type="button"
-              onClick={() => updateData({ goal: goal.value })}
-              className={`p-4 rounded-xl border-2 text-center transition-all ${
-                data.goal === goal.value
-                  ? 'border-teal-500 bg-teal-50'
-                  : 'border-slate-200 hover:border-teal-300'
-              }`}
-            >
-              <div className="text-3xl mb-2">{goal.icon}</div>
-              <div className="text-sm font-semibold text-slate-900">{goal.label}</div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* What You Get */}
-      <div className="bg-teal-50 border-2 border-teal-200 rounded-xl p-4">
-        <div className="text-sm font-semibold text-teal-900 mb-1">✓ WHAT YOU GET</div>
-        <div className="text-sm text-teal-700">
-          Connect with alumni mentors from your background within 24 hours of signing up.
-        </div>
-      </div>
-
-      {/* Next Button */}
-      <button
-        type="submit"
-        disabled={!data.employmentStatus || !data.goal}
-        className="w-full bg-teal-600 hover:bg-teal-700 text-white py-4 rounded-full font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-      >
-        Continue to Course Preferences →
-      </button>
     </form>
   );
 }

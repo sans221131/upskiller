@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { FormData } from '../LeadFormWizard';
 
 interface StepContactProps {
@@ -11,195 +11,225 @@ interface StepContactProps {
   isSubmitting: boolean;
 }
 
+const INDIAN_STATES = [
+  'Andhra Pradesh',
+  'Arunachal Pradesh',
+  'Assam',
+  'Bihar',
+  'Chhattisgarh',
+  'Goa',
+  'Gujarat',
+  'Haryana',
+  'Himachal Pradesh',
+  'Jharkhand',
+  'Karnataka',
+  'Kerala',
+  'Madhya Pradesh',
+  'Maharashtra',
+  'Manipur',
+  'Meghalaya',
+  'Mizoram',
+  'Nagaland',
+  'Odisha',
+  'Punjab',
+  'Rajasthan',
+  'Sikkim',
+  'Tamil Nadu',
+  'Telangana',
+  'Tripura',
+  'Uttar Pradesh',
+  'Uttarakhand',
+  'West Bengal',
+  'Delhi',
+  'Other',
+] as const;
+
 export default function StepContact({ data, updateData, onSubmit, onBack, isSubmitting }: StepContactProps) {
   const [consent, setConsent] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!consent) {
-      alert('Please consent to be contacted');
-      return;
-    }
+  const disableSubmit = useMemo(() => {
+    return (
+      !data.fullName ||
+      !data.email ||
+      !data.phone ||
+      data.phone.length !== 10 ||
+      !data.state ||
+      !data.city ||
+      !consent ||
+      isSubmitting
+    );
+  }, [data.fullName, data.email, data.phone, data.state, data.city, consent, isSubmitting]);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (disableSubmit) return;
     onSubmit();
   };
 
-  const states = [
-    'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
-    'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka',
-    'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram',
-    'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu',
-    'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
-    'Delhi', 'Other'
-  ];
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      <div>
-        <h2 className="text-3xl font-bold text-slate-900 mb-2">
-          Final Step: Verify Your Details
-        </h2>
-        <p className="text-slate-700 text-lg">
-          We'll use this information to send your personalized recommendations and connect you with a counselor.
+    <form onSubmit={handleSubmit} className="space-y-10">
+      <header className="space-y-3">
+        <p className="text-[0.75rem] font-semibold uppercase tracking-[0.32em] text-slate-400">
+          Step 5 · Confirmation
         </p>
-      </div>
+        <h2 className="text-3xl font-semibold leading-tight text-slate-900">
+          Where should we send your curated matches?
+        </h2>
+        <p className="text-base leading-relaxed text-slate-600">
+          We’ll confirm details via email, share shortlists on WhatsApp/SMS, and arrange a counsellor callback within 24 hours.
+        </p>
+      </header>
 
-      {/* Full Name */}
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold text-slate-800">
-          Full Name <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          value={data.fullName}
-          onChange={(e) => updateData({ fullName: e.target.value })}
-          className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-teal-500 focus:outline-none"
-          placeholder="Enter your full name"
-          required
-        />
-      </div>
-
-      {/* Email */}
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold text-slate-700">
-          Email Address <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="email"
-          value={data.email}
-          onChange={(e) => updateData({ email: e.target.value })}
-          className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-teal-500 focus:outline-none"
-          placeholder="your.email@example.com"
-          required
-        />
-      </div>
-
-      {/* Phone */}
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold text-slate-800">
-          Mobile Number <span className="text-red-500">*</span>
-        </label>
-        <div className="relative">
-          <span className="absolute left-4 top-3.5 text-slate-600">+91</span>
-          <input
-            type="tel"
-            value={data.phone}
-            onChange={(e) => updateData({ phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
-            className="w-full pl-14 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:border-teal-500 focus:outline-none"
-            placeholder="9876543210"
-            maxLength={10}
-            required
-          />
-        </div>
-      </div>
-
-      {/* Location */}
-      <div className="grid md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-slate-700">
-            State <span className="text-red-500">*</span>
-          </label>
-          <select
-            value={data.state}
-            onChange={(e) => updateData({ state: e.target.value })}
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-teal-500 focus:outline-none"
-            required
-          >
-            <option value="">Select state</option>
-            {states.map((state) => (
-              <option key={state} value={state}>{state}</option>
-            ))}
-          </select>
-        </div>
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-slate-700">
-            City <span className="text-red-500">*</span>
-          </label>
+      <section className="grid gap-6 md:grid-cols-2">
+        <label className="flex flex-col gap-2">
+          <span className="text-sm font-medium text-slate-700">Full name <span className="text-rose-500">*</span></span>
           <input
             type="text"
-            value={data.city}
-            onChange={(e) => updateData({ city: e.target.value })}
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-teal-500 focus:outline-none"
-            placeholder="Enter your city"
+            value={data.fullName}
+            onChange={(event) => updateData({ fullName: event.target.value })}
+            className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+            placeholder="e.g. Ayesha Sharma"
             required
           />
-        </div>
-      </div>
-
-      {/* Date of Birth */}
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold text-slate-700">
-          Date of Birth
         </label>
-        <input
-          type="date"
-          value={data.dob}
-          onChange={(e) => updateData({ dob: e.target.value })}
-          className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-teal-500 focus:outline-none"
-          max={new Date().toISOString().split('T')[0]}
-        />
-      </div>
+        <label className="flex flex-col gap-2">
+          <span className="text-sm font-medium text-slate-700">Email address <span className="text-rose-500">*</span></span>
+          <input
+            type="email"
+            value={data.email}
+            onChange={(event) => updateData({ email: event.target.value })}
+            className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+            placeholder="you@example.com"
+            required
+          />
+        </label>
+        <label className="flex flex-col gap-2">
+          <span className="text-sm font-medium text-slate-700">Mobile number <span className="text-rose-500">*</span></span>
+          <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 shadow-sm focus-within:border-teal-500">
+            <span className="text-sm font-semibold text-slate-500">+91</span>
+            <input
+              type="tel"
+              value={data.phone}
+              onChange={(event) =>
+                updateData({ phone: event.target.value.replace(/\D/g, '').slice(0, 10) })
+              }
+              className="w-full border-none text-base focus:outline-none"
+              placeholder="9876543210"
+              maxLength={10}
+              required
+            />
+          </div>
+          <span className="text-xs text-slate-500">We’ll use this for quick WhatsApp or SMS nudges.</span>
+        </label>
+        <div className="grid gap-6 md:grid-cols-2">
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-medium text-slate-700">State <span className="text-rose-500">*</span></span>
+            <select
+              value={data.state}
+              onChange={(event) => updateData({ state: event.target.value })}
+              className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+              required
+            >
+              <option value="">Select state…</option>
+              {INDIAN_STATES.map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-medium text-slate-700">City <span className="text-rose-500">*</span></span>
+            <input
+              type="text"
+              value={data.city}
+              onChange={(event) => updateData({ city: event.target.value })}
+              className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+              placeholder="e.g. Bengaluru"
+              required
+            />
+          </label>
+        </div>
+      </section>
 
-      {/* Consent */}
-      <div className="space-y-4">
-        <label className="flex items-start gap-3 p-4 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-teal-300 transition-all">
+      <section className="grid gap-6 md:grid-cols-2">
+        <label className="flex flex-col gap-2">
+          <span className="text-sm font-medium text-slate-700">Preferred contact channel</span>
+          <select
+            value={data.source}
+            onChange={(event) => updateData({ source: event.target.value })}
+            className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+          >
+            <option value="website">Website</option>
+            <option value="whatsapp">WhatsApp</option>
+            <option value="phone">Phone call</option>
+          </select>
+        </label>
+        <label className="flex flex-col gap-2">
+          <span className="text-sm font-medium text-slate-700">UTM / campaign code</span>
+          <input
+            type="text"
+            value={data.utmCampaign}
+            onChange={(event) => updateData({ utmCampaign: event.target.value })}
+            className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+            placeholder="Optional tracking code"
+          />
+        </label>
+        <label className="flex flex-col gap-2">
+          <span className="text-sm font-medium text-slate-700">Date of birth</span>
+          <input
+            type="date"
+            value={data.dob}
+            onChange={(event) => updateData({ dob: event.target.value })}
+            className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+            max={new Date().toISOString().split('T')[0]}
+          />
+        </label>
+      </section>
+
+      <section>
+        <label className={`flex items-start gap-3 rounded-2xl border px-4 py-4 transition-all ${
+          consent ? 'border-teal-500 bg-teal-50 shadow-sm' : 'border-slate-200 hover:border-teal-300'
+        }`}>
           <input
             type="checkbox"
             checked={consent}
-            onChange={(e) => setConsent(e.target.checked)}
-            className="w-5 h-5 text-teal-600 rounded focus:ring-teal-500 mt-0.5"
+            onChange={(event) => setConsent(event.target.checked)}
+            className="mt-1 h-5 w-5 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
             required
           />
-          <div className="text-sm text-slate-700">
-            <span className="font-semibold">I consent to be contacted</span> by Upskillers and partner institutions via phone, email, SMS, and WhatsApp regarding my inquiry. I understand this overrides DND/NDNC registration.
+          <div className="space-y-1 text-sm leading-relaxed text-slate-700">
+            <p>
+              <span className="font-semibold">I consent to be contacted</span> by Upskillers and partner institutions via phone, email, SMS, and WhatsApp for guidance related to this enquiry. I understand this overrides DND/NDNC registration.
+            </p>
           </div>
         </label>
-      </div>
+      </section>
 
-      {/* What Happens Next */}
-      <div className="bg-gradient-to-r from-teal-50 to-emerald-50 border-2 border-teal-200 rounded-xl p-6">
-        <h3 className="font-bold text-slate-900 mb-3">What happens next?</h3>
-        <div className="space-y-2 text-sm text-slate-700">
-          <div className="flex items-start gap-2">
-            <span className="text-teal-600 font-bold">1.</span>
-            <span>You'll receive an email with your program matches within 2 minutes</span>
-          </div>
-          <div className="flex items-start gap-2">
-            <span className="text-teal-600 font-bold">2.</span>
-            <span>A dedicated counselor will call you within 24 hours</span>
-          </div>
-          <div className="flex items-start gap-2">
-            <span className="text-teal-600 font-bold">3.</span>
-            <span>Get personalized guidance on applications, EMI, and scholarships</span>
-          </div>
-        </div>
-      </div>
+      <aside className="rounded-2xl border border-teal-100 bg-teal-50/70 p-5 text-sm text-teal-700">
+        <p className="text-sm font-semibold text-teal-800">Timeline immediately after submission</p>
+        <ol className="mt-3 space-y-3 text-sm leading-relaxed">
+          <li><span className="font-semibold text-teal-600">•</span> Instant email with shortlisted programs and fit notes.</li>
+          <li><span className="font-semibold text-teal-600">•</span> Counsellor call within 24 hours (or your chosen channel).</li>
+          <li><span className="font-semibold text-teal-600">•</span> Financing + scholarship options tailored to your profile.</li>
+        </ol>
+      </aside>
 
-      {/* Navigation Buttons */}
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
         <button
           type="button"
           onClick={onBack}
           disabled={isSubmitting}
-          className="px-8 py-4 border-2 border-slate-300 rounded-full font-semibold text-slate-700 hover:border-teal-500 transition-all disabled:opacity-50"
+          className="w-full rounded-full border border-slate-300 px-6 py-4 text-sm font-semibold text-slate-700 transition-all hover:border-teal-400 hover:text-teal-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
-          ← Back
+          Back
         </button>
         <button
           type="submit"
-          disabled={isSubmitting || !consent}
-          className="flex-1 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white py-4 rounded-full font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+          disabled={disableSubmit}
+          className="w-full rounded-full bg-slate-900 px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
-          {isSubmitting ? (
-            <>
-              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-              </svg>
-              Submitting...
-            </>
-          ) : (
-            'Complete & Get Recommendations →'
-          )}
+          {isSubmitting ? 'Submitting…' : 'Complete & Get Matches'}
         </button>
       </div>
     </form>

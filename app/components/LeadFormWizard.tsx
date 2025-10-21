@@ -1,17 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
-// Step components
-import StepProfile from './steps/StepProfile';
-import StepPreferences from './steps/StepPreferences';
-import StepEligibility from './steps/StepEligibility';
-import StepRecommendations from './steps/StepRecommendations';
-import StepContact from './steps/StepContact';
+import StepProfile from "./steps/StepProfile";
+import StepPreferences from "./steps/StepPreferences";
+import StepEligibility from "./steps/StepEligibility";
+import StepRecommendations from "./steps/StepRecommendations";
+import StepContact from "./steps/StepContact";
 
 export interface FormData {
-  // Profile & Goals (Step 1)
   fullName: string;
   gender: string;
   dob: string;
@@ -19,109 +17,120 @@ export interface FormData {
   salaryBand: string;
   experienceYears: string;
   goal: string;
-  
-  // Course Preferences (Step 2)
   degreeInterest: string;
   coursePreference: string;
   specialisationInterest: string;
   preferredMode: string;
-  
-  // Eligibility Context (Step 3)
   highestQualification: string;
   lastScorePercent: string;
   category: string;
   budgetRange: string;
   wantsEmi: boolean;
-  
-  // Contact & Confirmation (Step 5)
   email: string;
   phone: string;
   state: string;
   city: string;
   source: string;
   utmCampaign: string;
-  
-  // Selected programs from recommendations (Step 4)
   selectedPrograms: number[];
 }
 
 const initialFormData: FormData = {
-  fullName: '',
-  gender: '',
-  dob: '',
-  employmentStatus: '',
-  salaryBand: '',
-  experienceYears: '',
-  goal: '',
-  degreeInterest: '',
-  coursePreference: '',
-  specialisationInterest: '',
-  preferredMode: '',
-  highestQualification: '',
-  lastScorePercent: '',
-  category: '',
-  budgetRange: '',
+  fullName: "",
+  gender: "",
+  dob: "",
+  employmentStatus: "",
+  salaryBand: "",
+  experienceYears: "",
+  goal: "",
+  degreeInterest: "",
+  coursePreference: "",
+  specialisationInterest: "",
+  preferredMode: "",
+  highestQualification: "",
+  lastScorePercent: "",
+  category: "",
+  budgetRange: "",
   wantsEmi: false,
-  email: '',
-  phone: '',
-  state: '',
-  city: '',
-  source: 'website',
-  utmCampaign: '',
+  email: "",
+  phone: "",
+  state: "",
+  city: "",
+  source: "website",
+  utmCampaign: "",
   selectedPrograms: [],
 };
 
+const STEPS = [
+  { key: "profile", label: "Profile" },
+  { key: "preferences", label: "Preferences" },
+  { key: "eligibility", label: "Eligibility" },
+  { key: "recommendations", label: "Matches" },
+  { key: "contact", label: "Confirmation" },
+] as const;
+
 export default function LeadFormWizard() {
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
 
-  const totalSteps = 5;
+  const totalSteps = STEPS.length;
 
   const updateFormData = (data: Partial<FormData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
   };
 
+  const gotoStep = (index: number) => {
+    setCurrentStep(index);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const nextStep = () => {
-    if (currentStep < totalSteps) {
-      setCurrentStep((prev) => prev + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (currentStep < totalSteps - 1) {
+      gotoStep(currentStep + 1);
     }
   };
 
   const prevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep((prev) => prev - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (currentStep > 0) {
+      gotoStep(currentStep - 1);
     }
   };
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    setSubmissionError(null);
     try {
-      const response = await fetch('/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        router.push('/thank-you');
-      } else {
-        alert('Something went wrong. Please try again.');
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => ({}))) as {
+          error?: string;
+        };
+        throw new Error(payload.error || "Unable to submit. Please try again.");
       }
+
+      router.push("/thank-you");
     } catch (error) {
-      console.error('Submission error:', error);
-      alert('Failed to submit form. Please try again.');
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to submit form. Please try again.";
+      setSubmissionError(message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const renderStep = () => {
+  const stepContent = useMemo(() => {
     switch (currentStep) {
-      case 1:
+      case 0:
         return (
           <StepProfile
             data={formData}
@@ -129,7 +138,7 @@ export default function LeadFormWizard() {
             onNext={nextStep}
           />
         );
-      case 2:
+      case 1:
         return (
           <StepPreferences
             data={formData}
@@ -138,7 +147,7 @@ export default function LeadFormWizard() {
             onBack={prevStep}
           />
         );
-      case 3:
+      case 2:
         return (
           <StepEligibility
             data={formData}
@@ -147,7 +156,7 @@ export default function LeadFormWizard() {
             onBack={prevStep}
           />
         );
-      case 4:
+      case 3:
         return (
           <StepRecommendations
             data={formData}
@@ -156,7 +165,7 @@ export default function LeadFormWizard() {
             onBack={prevStep}
           />
         );
-      case 5:
+      case 4:
         return (
           <StepContact
             data={formData}
@@ -169,42 +178,63 @@ export default function LeadFormWizard() {
       default:
         return null;
     }
-  };
+  }, [currentStep, formData, isSubmitting]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white py-12 px-4">
-      <div className="max-w-3xl mx-auto">
-        {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-semibold text-teal-600">
-              STEP {currentStep} OF {totalSteps}
-            </span>
-            <span className="text-sm text-slate-500">
-              ≈{[45, 60, 45, 30, 30][currentStep - 1]}s
-            </span>
-          </div>
-          <div className="w-full bg-slate-200 rounded-full h-2">
-            <div
-              className="bg-gradient-to-r from-teal-500 to-emerald-500 h-2 rounded-full transition-all duration-500"
-              style={{ width: `${(currentStep / totalSteps) * 100}%` }}
-            />
+    <div className="relative min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 py-12 px-4">
+      <div className="mx-auto max-w-4xl space-y-8">
+        <div className="rounded-3xl border border-slate-200 bg-white/80 p-6 backdrop-blur-sm shadow-sm">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">
+                Step {currentStep + 1} of {totalSteps}
+              </span>
+              <span className="text-xs text-slate-400">
+                {["~45s", "~60s", "~45s", "~30s", "~30s"][currentStep]}
+              </span>
+            </div>
+            <div className="grid gap-3 md:grid-cols-5">
+              {STEPS.map((step, index) => {
+                const isActive = index === currentStep;
+                const isComplete = index < currentStep;
+                return (
+                  <div key={step.key} className="flex flex-col gap-1 text-left">
+                    <div
+                      className={`inline-flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
+                        isActive
+                          ? "bg-slate-900 text-white shadow-sm"
+                          : isComplete
+                          ? "bg-teal-100 text-teal-700"
+                          : "bg-slate-100 text-slate-500"
+                      }`}
+                    >
+                      {index + 1}
+                    </div>
+                    <span
+                      className={`text-sm font-semibold ${
+                        isActive ? "text-slate-900" : "text-slate-500"
+                      }`}
+                    >
+                      {step.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
-        {/* Step Content */}
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          {renderStep()}
+        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-lg">
+          {submissionError ? (
+            <div className="mb-6 rounded-2xl border border-rose-100 bg-rose-50/70 px-4 py-3 text-sm text-rose-700">
+              {submissionError}
+            </div>
+          ) : null}
+          {stepContent}
         </div>
 
-        {/* Auto-save indicator */}
-        <div className="text-center mt-4 text-sm text-slate-500">
-          <span className="inline-flex items-center gap-2">
-            <svg className="w-4 h-4 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            Progress auto-saves
-          </span>
+        <div className="text-center text-xs uppercase tracking-[0.28em] text-slate-400">
+          Progress auto-saves on this device
         </div>
       </div>
     </div>

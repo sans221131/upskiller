@@ -15,14 +15,36 @@ export default function AdminLoginPage() {
     setError('');
     setIsLoading(true);
 
-    // Simple auth check (in production, this should be an API call)
-    if (email === 'admin@upskillers.com' && password === 'admin123') {
-      // Store auth token (simplified)
-      localStorage.setItem('adminAuth', 'true');
-      localStorage.setItem('adminEmail', email);
-      router.push('/admin/dashboard');
-    } else {
-      setError('Invalid email or password');
+    try {
+      const response = await fetch('/api/admin/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(payload?.error ?? 'Unable to sign in');
+      }
+
+      const payload = (await response.json()) as {
+        token?: string;
+        admin?: { email?: string };
+      };
+      const authToken = payload.token ?? '';
+
+      if (authToken) {
+        localStorage.setItem('adminAuthToken', authToken);
+      } else {
+        localStorage.removeItem('adminAuthToken');
+      }
+      localStorage.setItem('adminEmail', payload.admin?.email ?? email);
+
+      router.replace('/admin/dashboard');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unable to sign in';
+      setError(message || 'Invalid credentials');
+    } finally {
       setIsLoading(false);
     }
   };

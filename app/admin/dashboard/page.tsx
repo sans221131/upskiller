@@ -101,10 +101,10 @@ export default function AdminDashboard() {
   const [institutionSearch, setInstitutionSearch] = useState('');
 
   useEffect(() => {
-    const isAuth = localStorage.getItem('adminAuth');
+    const token = localStorage.getItem('adminAuthToken');
     const email = localStorage.getItem('adminEmail');
-    
-    if (!isAuth) {
+
+    if (!token) {
       router.push('/admin');
     } else {
       setAdminEmail(email || '');
@@ -121,62 +121,95 @@ export default function AdminDashboard() {
     }
   }, [activeTab]);
 
-  const fetchLeads = async () => {
-    setLoading(true);
+  useEffect(() => {
+    const loadAll = async () => {
+      setLoading(true);
+      try {
+        await fetchLeads({ skipLoading: true });
+        await fetchPrograms({ skipLoading: true });
+        await fetchInstitutions({ skipLoading: true });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadAll();
+  }, []);
+
+  const fetchLeads = async ({ skipLoading = false }: { skipLoading?: boolean } = {}) => {
+    if (!skipLoading) {
+      setLoading(true);
+    }
     try {
       const response = await fetch('/api/admin/leads');
       if (response.ok) {
-        const data = await response.json() as Lead[];
+        const data = (await response.json()) as Lead[];
         setLeads(data);
       } else {
-        setLeads(sampleLeads);
+        const { error } = (await response.json().catch(() => ({}))) as { error?: string };
+        console.error('Failed to fetch leads:', error);
+        setLeads([]);
       }
     } catch (error) {
       console.error('Error fetching leads:', error);
-      setLeads(sampleLeads);
+      setLeads([]);
     } finally {
-      setLoading(false);
+      if (!skipLoading) {
+        setLoading(false);
+      }
     }
   };
 
-  const fetchPrograms = async () => {
-    setLoading(true);
+  const fetchPrograms = async ({ skipLoading = false }: { skipLoading?: boolean } = {}) => {
+    if (!skipLoading) {
+      setLoading(true);
+    }
     try {
       const response = await fetch('/api/admin/programs');
       if (response.ok) {
-        const data = await response.json() as Program[];
+        const data = (await response.json()) as Program[];
         setPrograms(data);
       } else {
-        setPrograms(samplePrograms);
+        const { error } = (await response.json().catch(() => ({}))) as { error?: string };
+        console.error('Failed to fetch programs:', error);
+        setPrograms([]);
       }
     } catch (error) {
       console.error('Error fetching programs:', error);
-      setPrograms(samplePrograms);
+      setPrograms([]);
     } finally {
-      setLoading(false);
+      if (!skipLoading) {
+        setLoading(false);
+      }
     }
   };
 
-  const fetchInstitutions = async () => {
-    setLoading(true);
+  const fetchInstitutions = async ({ skipLoading = false }: { skipLoading?: boolean } = {}) => {
+    if (!skipLoading) {
+      setLoading(true);
+    }
     try {
       const response = await fetch('/api/admin/institutions');
       if (response.ok) {
-        const data = await response.json() as Institution[];
+        const data = (await response.json()) as Institution[];
         setInstitutions(data);
       } else {
-        setInstitutions(sampleInstitutions);
+        const { error } = (await response.json().catch(() => ({}))) as { error?: string };
+        console.error('Failed to fetch institutions:', error);
+        setInstitutions([]);
       }
     } catch (error) {
       console.error('Error fetching institutions:', error);
-      setInstitutions(sampleInstitutions);
+      setInstitutions([]);
     } finally {
-      setLoading(false);
+      if (!skipLoading) {
+        setLoading(false);
+      }
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('adminAuth');
+    localStorage.removeItem('adminAuthToken');
     localStorage.removeItem('adminEmail');
     router.push('/admin');
   };
@@ -190,9 +223,13 @@ export default function AdminDashboard() {
       });
       if (response.ok) {
         fetchLeads();
+      } else {
+        const { error } = (await response.json().catch(() => ({}))) as { error?: string };
+        throw new Error(error || 'Failed to update lead');
       }
     } catch (error) {
       console.error('Error updating lead:', error);
+      alert(error instanceof Error ? error.message : 'Failed to update lead.');
     }
   };
 
@@ -204,9 +241,13 @@ export default function AdminDashboard() {
       });
       if (response.ok) {
         fetchLeads();
+      } else {
+        const { error } = (await response.json().catch(() => ({}))) as { error?: string };
+        throw new Error(error || 'Failed to delete lead');
       }
     } catch (error) {
       console.error('Error deleting lead:', error);
+      alert(error instanceof Error ? error.message : 'Failed to delete lead.');
     }
   };
 
@@ -218,11 +259,13 @@ export default function AdminDashboard() {
       });
       if (response.ok) {
         fetchPrograms();
+      } else {
+        const { error } = (await response.json().catch(() => ({}))) as { error?: string };
+        throw new Error(error || 'Failed to delete program');
       }
     } catch (error) {
-      console.error('Error deleting program (will remove locally as fallback):', error);
-      // fallback: remove locally
-      setPrograms(prev => prev.filter(p => p.id !== programId));
+      console.error('Error deleting program:', error);
+      alert(error instanceof Error ? error.message : 'Failed to delete program.');
     }
   };
 
@@ -234,11 +277,13 @@ export default function AdminDashboard() {
       });
       if (response.ok) {
         fetchInstitutions();
+      } else {
+        const { error } = (await response.json().catch(() => ({}))) as { error?: string };
+        throw new Error(error || 'Failed to delete institution');
       }
     } catch (error) {
-      console.error('Error deleting institution (fallback):', error);
-      setInstitutions(prev => prev.filter(i => i.id !== institutionId));
-      setPrograms(prev => prev.filter(p => p.institutionId !== institutionId));
+      console.error('Error deleting institution:', error);
+      alert(error instanceof Error ? error.message : 'Failed to delete institution.');
     }
   };
 
@@ -266,241 +311,13 @@ export default function AdminDashboard() {
     a.click();
   };
 
-  // Sample data for demonstration
-  const sampleLeads: Lead[] = [
-    {
-      id: 1,
-      fullName: 'Priya Sharma',
-      email: 'priya.sharma@email.com',
-      phone: '+91 98765 43210',
-      gender: 'Female',
-      state: 'Maharashtra',
-      city: 'Mumbai',
-      employmentStatus: 'Employed',
-      salaryBand: '5-10 LPA',
-      degreeInterest: 'MBA',
-      coursePreference: 'Business Management',
-      specialisationInterest: 'Finance',
-      goal: 'Career Advancement',
-      status: 'new',
-      consentedAt: '2024-01-15T10:30:00Z',
-      experienceYears: '3.5',
-      budgetRange: '2-4 Lakhs',
-      preferredMode: 'online',
-    },
-    {
-      id: 2,
-      fullName: 'Rahul Verma',
-      email: 'rahul.v@email.com',
-      phone: '+91 98765 43211',
-      gender: 'Male',
-      state: 'Karnataka',
-      city: 'Bangalore',
-      employmentStatus: 'Employed',
-      salaryBand: '10-15 LPA',
-      degreeInterest: 'Executive MBA',
-      coursePreference: 'Leadership',
-      specialisationInterest: 'Strategy',
-      goal: 'Leadership Role',
-      status: 'contacted',
-      consentedAt: '2024-01-14T14:20:00Z',
-      experienceYears: '7.0',
-      budgetRange: '4-6 Lakhs',
-      preferredMode: 'blended',
-    },
-    {
-      id: 3,
-      fullName: 'Anita Desai',
-      email: 'anita.d@email.com',
-      phone: '+91 98765 43212',
-      gender: 'Female',
-      state: 'Delhi',
-      city: 'New Delhi',
-      employmentStatus: 'Employed',
-      salaryBand: '8-12 LPA',
-      degreeInterest: 'PGDM',
-      coursePreference: 'Marketing',
-      specialisationInterest: 'Digital Marketing',
-      goal: 'Skill Enhancement',
-      status: 'qualified',
-      consentedAt: '2024-01-14T09:15:00Z',
-      experienceYears: '5.0',
-      budgetRange: '3-5 Lakhs',
-      preferredMode: 'online',
-    },
-    {
-      id: 4,
-      fullName: 'Karan Mehta',
-      email: 'karan.m@email.com',
-      phone: '+91 98765 43215',
-      gender: 'Male',
-      state: 'Tamil Nadu',
-      city: 'Chennai',
-      employmentStatus: 'Self-Employed',
-      salaryBand: '3-6 LPA',
-      degreeInterest: 'MBA',
-      coursePreference: 'Analytics',
-      specialisationInterest: 'Business Analytics',
-      goal: 'Switch Career',
-      status: 'new',
-      consentedAt: '2024-01-12T11:00:00Z',
-      experienceYears: '2.0',
-      budgetRange: '2-4 Lakhs',
-      preferredMode: 'online',
-    },
-    {
-      id: 5,
-      fullName: 'Sneha Kapoor',
-      email: 'sneha.k@email.com',
-      phone: '+91 98765 43216',
-      gender: 'Female',
-      state: 'Uttar Pradesh',
-      city: 'Lucknow',
-      employmentStatus: 'Unemployed',
-      salaryBand: '',
-      degreeInterest: 'PGDM',
-      coursePreference: 'Marketing',
-      specialisationInterest: 'Brand Management',
-      goal: 'Skill Up',
-      status: 'contacted',
-      consentedAt: '2024-01-10T09:30:00Z',
-      experienceYears: '0.0',
-      budgetRange: '1-2 Lakhs',
-      preferredMode: 'weekend',
-    },
-  ];
-
-  const sampleInstitutions: Institution[] = [
-    {
-      id: 1,
-      name: 'Manipal University Jaipur',
-      slug: 'manipal-university-jaipur',
-      location: 'Jaipur, Rajasthan',
-      accreditation: 'NAAC A+ | UGC Approved',
-      website: 'https://jaipur.manipal.edu',
-      establishedYear: 2011,
-      shortDescription: 'Premier institution offering world-class online and blended MBA programs',
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-01T00:00:00Z',
-    },
-    {
-      id: 2,
-      name: 'NMIMS Global Access',
-      slug: 'nmims-global-access',
-      location: 'Mumbai, Maharashtra',
-      accreditation: 'NAAC A+ | AACSB | AMBA',
-      website: 'https://nmims.edu',
-      establishedYear: 1981,
-      shortDescription: "India's leading business school with online MBA programs",
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-01T00:00:00Z',
-    },
-    {
-      id: 3,
-      name: 'Alliance University',
-      slug: 'alliance-university',
-      location: 'Bengaluru, Karnataka',
-      accreditation: 'NAAC A',
-      website: 'https://alliance.edu',
-      establishedYear: 2010,
-      shortDescription: 'Strong industry links and project-based learning',
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-01T00:00:00Z',
-    },
-    {
-      id: 4,
-      name: 'IMT Ghaziabad',
-      slug: 'imt-ghaziabad',
-      location: 'Ghaziabad, UP',
-      accreditation: 'AICTE Approved',
-      website: 'https://imt.ac.in',
-      establishedYear: 1980,
-      shortDescription: 'Experienced faculty and executive education',
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-01T00:00:00Z',
-    },
-  ];
-
-  const samplePrograms: Program[] = [
-    {
-      id: 1,
-      institutionId: 1,
-      institutionName: 'Manipal University Jaipur',
-      degreeType: 'MBA',
-      title: 'MBA (Online)',
-      durationMonths: 24,
-      deliveryMode: 'online',
-      totalFee: 350000,
-      applicationFee: 1000,
-      emiAvailable: true,
-      highlights: '100% Online | Industry-relevant curriculum | Live sessions',
-      eligibility: "Bachelor's degree with 50% marks",
-      isFeatured: true,
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-01T00:00:00Z',
-    },
-    {
-      id: 2,
-      institutionId: 1,
-      institutionName: 'Manipal University Jaipur',
-      degreeType: 'Executive MBA',
-      title: 'Executive MBA (Blended)',
-      durationMonths: 18,
-      deliveryMode: 'blended',
-      totalFee: 450000,
-      applicationFee: 1500,
-      emiAvailable: true,
-      workExperienceMinYears: 3,
-      highlights: 'Weekend classes | Campus immersion | Senior leadership focus',
-      eligibility: "Bachelor's degree + 3 years work experience",
-      isFeatured: false,
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-01T00:00:00Z',
-    },
-    {
-      id: 3,
-      institutionId: 2,
-      institutionName: 'NMIMS Global Access',
-      degreeType: 'MBA',
-      title: 'MBA in Digital Marketing',
-      durationMonths: 24,
-      deliveryMode: 'online',
-      totalFee: 300000,
-      applicationFee: 1200,
-      emiAvailable: true,
-      highlights: 'Project-based learning | Placements support',
-      eligibility: "Bachelor's degree with 50%",
-      isFeatured: false,
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-01T00:00:00Z',
-    },
-    {
-      id: 4,
-      institutionId: 3,
-      institutionName: 'Alliance University',
-      degreeType: 'MBA',
-      title: 'MBA (Business Analytics)',
-      durationMonths: 24,
-      deliveryMode: 'blended',
-      totalFee: 420000,
-      applicationFee: 1500,
-      emiAvailable: true,
-      workExperienceMinYears: 1,
-      highlights: 'Analytics labs | Industry projects',
-      eligibility: "Bachelor's degree",
-      isFeatured: false,
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-01T00:00:00Z',
-    },
-  ];
-
   // Helpers: open modal and initialize forms
   const openAddProgram = () => {
     setSelectedProgram(null);
     setProgramForm({
       degreeType: 'MBA',
       title: '',
-      institutionId: institutions[0]?.id || sampleInstitutions[0].id,
+      institutionId: institutions[0]?.id,
       durationMonths: 24,
       deliveryMode: 'online',
       totalFee: 0,
@@ -541,80 +358,65 @@ export default function AdminDashboard() {
 
   const handleCreateOrUpdateProgram = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    // Try API first, otherwise mutate local state
     try {
-      const payload = { ...programForm };
+      const { institutionName, createdAt, updatedAt, id, ...rest } = programForm;
+      const payload = {
+        ...rest,
+        institutionId: rest.institutionId,
+      };
+
+      if (!payload.institutionId) {
+        throw new Error('Please select an institution before saving a program.');
+      }
+
+      let response: Response;
+
       if (selectedProgram) {
-        // update
-        const response = await fetch(`/api/admin/programs/${selectedProgram.id}`, {
-          method: 'PUT',
+        response = await fetch(`/api/admin/programs/${selectedProgram.id}`, {
+          method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        if (response.ok) {
-          fetchPrograms();
-          setShowProgramModal(false);
-          return;
-        }
       } else {
-        const response = await fetch('/api/admin/programs', {
+        response = await fetch('/api/admin/programs', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        if (response.ok) {
-          fetchPrograms();
-          setShowProgramModal(false);
-          return;
-        }
       }
+
+      if (!response.ok) {
+        const { error } = (await response.json().catch(() => ({}))) as { error?: string };
+        throw new Error(error || 'Unable to save program');
+      }
+
+      await fetchPrograms();
+      setShowProgramModal(false);
     } catch (err) {
-      console.warn('API not available, falling back to local state:', err);
+      console.error('Error saving program:', err);
+      alert(err instanceof Error ? err.message : 'Unable to save program');
     }
-
-    // Local fallback
-    if (selectedProgram) {
-      setPrograms(prev => prev.map(p => (p.id === selectedProgram.id ? { ...p, ...(programForm as Program) } : p)));
-    } else {
-      const nextId = Math.max(0, ...programs.map(p => p.id), ...samplePrograms.map(p => p.id)) + 1;
-      const inst = institutions.find(i => i.id === programForm.institutionId) || sampleInstitutions.find(i => i.id === programForm.institutionId);
-      const newProgram: Program = {
-        id: nextId,
-        institutionId: programForm.institutionId as number,
-        institutionName: inst?.name,
-        degreeType: (programForm.degreeType as string) || 'MBA',
-        title: (programForm.title as string) || 'New Program',
-        durationMonths: programForm.durationMonths as number,
-        deliveryMode: programForm.deliveryMode as string,
-        totalFee: programForm.totalFee as number,
-        applicationFee: programForm.applicationFee as number,
-        emiAvailable: !!programForm.emiAvailable,
-        highlights: programForm.highlights as string,
-        eligibility: programForm.eligibility as string,
-        isFeatured: !!programForm.isFeatured,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      setPrograms(prev => [newProgram, ...prev]);
-    }
-
-    setShowProgramModal(false);
   };
 
   const handleCreateOrUpdateInstitution = async (e?: React.FormEvent) => {
     e?.preventDefault();
     try {
-      const payload = { ...institutionForm };
+      const { id, createdAt, updatedAt, ...rest } = institutionForm;
+      const payload = { ...rest };
+
+      if (!payload.name || !payload.slug) {
+        throw new Error('Name and slug are required.');
+      }
+
       if (selectedInstitution) {
         const response = await fetch(`/api/admin/institutions/${selectedInstitution.id}`, {
-          method: 'PUT',
+          method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        if (response.ok) {
-          fetchInstitutions();
-          setShowInstitutionModal(false);
-          return;
+        if (!response.ok) {
+          const { error } = (await response.json().catch(() => ({}))) as { error?: string };
+          throw new Error(error || 'Unable to update institution');
         }
       } else {
         const response = await fetch('/api/admin/institutions', {
@@ -622,39 +424,17 @@ export default function AdminDashboard() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        if (response.ok) {
-          fetchInstitutions();
-          setShowInstitutionModal(false);
-          return;
+        if (!response.ok) {
+          const { error } = (await response.json().catch(() => ({}))) as { error?: string };
+          throw new Error(error || 'Unable to create institution');
         }
       }
+      await fetchInstitutions();
+      setShowInstitutionModal(false);
     } catch (err) {
-      console.warn('Institution API not available, fallback to local state:', err);
+      console.error('Error saving institution:', err);
+      alert(err instanceof Error ? err.message : 'Unable to save institution');
     }
-
-    // Local fallback
-    if (selectedInstitution) {
-      setInstitutions(prev => prev.map(i => (i.id === selectedInstitution.id ? { ...i, ...(institutionForm as Institution) } : i)));
-    } else {
-      const nextId = Math.max(0, ...institutions.map(i => i.id), ...sampleInstitutions.map(i => i.id)) + 1;
-      const newInst: Institution = {
-        id: nextId,
-        name: (institutionForm.name as string) || 'New Institution',
-        slug: (institutionForm.slug as string) || `inst-${nextId}`,
-        location: institutionForm.location,
-        accreditation: institutionForm.accreditation,
-        website: institutionForm.website,
-        heroImage: institutionForm.heroImage,
-        logoUrl: institutionForm.logoUrl,
-        establishedYear: institutionForm.establishedYear,
-        shortDescription: institutionForm.shortDescription,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      setInstitutions(prev => [newInst, ...prev]);
-    }
-
-    setShowInstitutionModal(false);
   };
 
   const getStatusColor = (status: string) => {
@@ -667,14 +447,18 @@ export default function AdminDashboard() {
     }
   };
 
+  const totalLeads = leads.length;
+  const convertedLeads = leads.filter((lead) => lead.status === 'converted').length;
+  const conversionRate = totalLeads > 0 ? `${((convertedLeads / totalLeads) * 100).toFixed(1)}%` : '0%';
+
   const stats = [
-    { label: 'Total Leads', value: leads.length || '1,247', change: '+12%', icon: '👥', color: 'bg-blue-500' },
-    { label: 'Active Programs', value: programs.length || '68', change: '+5', icon: '🎓', color: 'bg-teal-500' },
-    { label: 'Partner Institutions', value: institutions.length || '24', change: '+2', icon: '🏛️', color: 'bg-purple-500' },
-    { label: 'Conversion Rate', value: '34.5%', change: '+2.3%', icon: '📈', color: 'bg-emerald-500' },
+    { label: 'Total Leads', value: totalLeads.toString(), change: '—', icon: '👥', color: 'bg-blue-500' },
+    { label: 'Active Programs', value: programs.length.toString(), change: '—', icon: '🎓', color: 'bg-teal-500' },
+    { label: 'Partner Institutions', value: institutions.length.toString(), change: '—', icon: '🏛️', color: 'bg-purple-500' },
+    { label: 'Conversion Rate', value: conversionRate, change: '—', icon: '📈', color: 'bg-emerald-500' },
   ];
 
-  const recentLeads = leads.length > 0 ? leads.slice(0, 5) : sampleLeads.slice(0, 5);
+  const recentLeads = leads.slice(0, 5);
 
   // Filtered data
   const filteredLeads = leads.filter(lead => {
@@ -1388,10 +1172,23 @@ export default function AdminDashboard() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700">Institution</label>
-                  <select value={programForm.institutionId || ''} onChange={(e) => setProgramForm(f => ({ ...f, institutionId: Number(e.target.value) }))} className="mt-1 w-full px-3 py-2 border rounded-lg">
-                    {(institutions.length ? institutions : sampleInstitutions).map(i => (
-                      <option key={i.id} value={i.id}>{i.name}</option>
-                    ))}
+                  <select
+                    value={programForm.institutionId ?? ''}
+                    onChange={(e) => setProgramForm(f => ({ ...f, institutionId: Number(e.target.value) }))}
+                    className="mt-1 w-full px-3 py-2 border rounded-lg"
+                    required
+                  >
+                    {institutions.length === 0 ? (
+                      <option value="" disabled>
+                        No institutions available
+                      </option>
+                    ) : (
+                      institutions.map((institution) => (
+                        <option key={institution.id} value={institution.id}>
+                          {institution.name}
+                        </option>
+                      ))
+                    )}
                   </select>
                 </div>
                 <div>

@@ -1,4 +1,47 @@
-export default function ProgramsPage() {
+import { desc, eq, getTableColumns } from 'drizzle-orm';
+
+import { db } from '@/db';
+import { institutions, programs as programsTable } from '@/db/schema';
+
+import ProgramCatalog from './ProgramCatalog';
+
+type ProgramSummary = {
+  id: number;
+  title: string;
+  degreeType: string;
+  durationMonths: number | null;
+  deliveryMode: string | null;
+  totalFee: number | null;
+  emiAvailable: boolean | null;
+  highlights: string | null;
+  institutionId: number;
+  institutionName: string | null;
+  institutionSlug: string | null;
+  institutionLocation: string | null;
+  institutionAccreditation: string | null;
+};
+
+async function getPrograms(): Promise<ProgramSummary[]> {
+  const programList = await db
+    .select({
+      ...getTableColumns(programsTable),
+      institutionName: institutions.name,
+      institutionSlug: institutions.slug,
+      institutionLocation: institutions.location,
+      institutionAccreditation: institutions.accreditation,
+    })
+    .from(programsTable)
+    .leftJoin(institutions, eq(programsTable.institutionId, institutions.id))
+    .orderBy(desc(programsTable.createdAt));
+
+  return programList;
+}
+
+export const revalidate = 300;
+
+export default async function ProgramsPage() {
+  const programs = await getPrograms();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Header */}
@@ -41,18 +84,10 @@ export default function ProgramsPage() {
         </div>
       </section>
 
-      {/* Coming Soon */}
+      {/* Program Grid */}
       <section className="py-12 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-white p-6 rounded-2xl border-2 border-slate-200 animate-pulse">
-                <div className="h-6 bg-slate-200 rounded mb-4"></div>
-                <div className="h-4 bg-slate-100 rounded mb-2"></div>
-                <div className="h-4 bg-slate-100 rounded w-3/4"></div>
-              </div>
-            ))}
-          </div>
+          <ProgramCatalog programs={programs} />
         </div>
       </section>
     </div>
