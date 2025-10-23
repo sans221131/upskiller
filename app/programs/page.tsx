@@ -1,9 +1,9 @@
-import { desc, eq, getTableColumns } from 'drizzle-orm';
+import { desc, eq, getTableColumns } from "drizzle-orm";
 
-import { db } from '@/db';
-import { institutions, programs as programsTable } from '@/db/schema';
+import { db } from "@/db";
+import { institutions, programs as programsTable } from "@/db/schema";
 
-import ProgramCatalog from './ProgramCatalog';
+import ProgramCatalog from "./ProgramCatalog";
 
 type ProgramSummary = {
   id: number;
@@ -14,6 +14,7 @@ type ProgramSummary = {
   totalFee: number | null;
   emiAvailable: boolean | null;
   highlights: string | null;
+  outcomes: string | null;
   institutionId: number;
   institutionName: string | null;
   institutionSlug: string | null;
@@ -53,7 +54,10 @@ export default async function ProgramsPage() {
             </div>
             <span className="text-xl font-bold text-slate-900">Upskillers</span>
           </a>
-          <a href="/lead-form" className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-full text-sm font-medium transition-all">
+          <a
+            href="/lead-form"
+            className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-full text-sm font-medium transition-all"
+          >
             Get Matched
           </a>
         </div>
@@ -66,18 +70,23 @@ export default async function ProgramsPage() {
             Explore Our Programs
           </h1>
           <p className="text-xl text-slate-600 mb-12 max-w-3xl mx-auto">
-            Browse through 60+ carefully curated programs from top institutions. Find the perfect match for your career goals.
+            Browse through 60+ carefully curated programs from top institutions.
+            Find the perfect match for your career goals.
           </p>
-          
+
           {/* CTA */}
           <div className="bg-teal-50 border-2 border-teal-200 rounded-2xl p-8 max-w-2xl mx-auto">
             <h3 className="text-2xl font-bold text-slate-900 mb-3">
               Get Personalized Recommendations
             </h3>
             <p className="text-slate-600 mb-6">
-              Answer a few questions and we'll match you with programs that fit your profile, budget, and goals.
+              Answer a few questions and we'll match you with programs that fit
+              your profile, budget, and goals.
             </p>
-            <a href="/lead-form" className="inline-block bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-full font-semibold transition-all">
+            <a
+              href="/lead-form"
+              className="inline-block bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-full font-semibold transition-all"
+            >
               Start Assessment (2 mins)
             </a>
           </div>

@@ -33,12 +33,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const insertPayload = {
+      name: (body.name as string).trim(),
+      slug: (body.slug as string).trim(),
+      location: (body.location as string) || null,
+      accreditation: (body.accreditation as string) || null,
+      website: (body.website as string) || null,
+      heroImage: (body.heroImage as string) || null,
+      logoUrl: (body.logoUrl as string) || null,
+      establishedYear: typeof body.establishedYear === 'number' ? body.establishedYear : null,
+      shortDescription: (body.shortDescription as string) || null,
+    } satisfies typeof institutions.$inferInsert;
+
     const [created] = await db
       .insert(institutions)
-      .values({
-        ...body,
-        updatedAt: new Date(),
-      })
+      .values(insertPayload)
       .returning();
 
     return NextResponse.json(created, { status: 201 });

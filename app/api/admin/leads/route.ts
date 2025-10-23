@@ -32,10 +32,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const [created] = await db
-      .insert(leads)
-      .values(body)
-      .returning();
+    const insertPayload = {
+      fullName: (body.fullName as string).trim(),
+      email: (body.email as string).trim(),
+      phone: (body.phone as string).replace(/\D/g, '').slice(0, 15),
+      gender: (body.gender as string) || null,
+      dob: (body.dob as string) || null,
+      state: (body.state as string) || null,
+      city: (body.city as string) || null,
+      employmentStatus: (body.employmentStatus as string) || null,
+      salaryBand: (body.salaryBand as string) || null,
+      highestQualification: (body.highestQualification as string) || null,
+      lastScorePercent: typeof body.lastScorePercent === 'number' ? String(body.lastScorePercent) : null,
+      degreeInterest: (body.degreeInterest as string) || null,
+      coursePreference: (body.coursePreference as string) || null,
+      specialisationInterest: (body.specialisationInterest as string) || null,
+      goal: (body.goal as string) || null,
+      budgetRange: (body.budgetRange as string) || null,
+      wantsEmi: body.wantsEmi === undefined ? false : Boolean(body.wantsEmi),
+      category: (body.category as string) || null,
+      experienceYears: typeof body.experienceYears === 'number' ? String(body.experienceYears) : null,
+      preferredMode: (body.preferredMode as string) || null,
+      source: (body.source as string) || 'website',
+      utmCampaign: (body.utmCampaign as string) || null,
+      status: (body.status as string) || 'new',
+    } satisfies typeof leads.$inferInsert;
+
+    const [created] = await db.insert(leads).values(insertPayload).returning();
 
     return NextResponse.json(created, { status: 201 });
   } catch (error) {

@@ -12,12 +12,15 @@ function parseLeadId(id: string) {
   return leadId;
 }
 
+type RouteContext = { params: Promise<{ id: string }> };
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext,
 ) {
   try {
-    const leadId = parseLeadId(params.id);
+    const { id } = await context.params;
+    const leadId = parseLeadId(id);
 
     const lead = await db.query.leads.findFirst({
       where: eq(leads.id, leadId),
@@ -39,10 +42,11 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext,
 ) {
   try {
-    const leadId = parseLeadId(params.id);
+    const { id } = await context.params;
+    const leadId = parseLeadId(id);
     const body = (await request.json()) as Record<string, unknown>;
 
     const updateData = Object.fromEntries(
@@ -75,10 +79,11 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext,
 ) {
   try {
-    const leadId = parseLeadId(params.id);
+    const { id } = await context.params;
+    const leadId = parseLeadId(id);
 
     const [deleted] = await db
       .delete(leads)

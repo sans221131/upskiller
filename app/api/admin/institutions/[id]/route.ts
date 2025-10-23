@@ -12,12 +12,15 @@ function parseInstitutionId(id: string) {
   return institutionId;
 }
 
+type RouteContext = { params: Promise<{ id: string }> };
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext,
 ) {
   try {
-    const institutionId = parseInstitutionId(params.id);
+    const { id } = await context.params;
+    const institutionId = parseInstitutionId(id);
 
     const institution = await db.query.institutions.findFirst({
       where: eq(institutions.id, institutionId),
@@ -39,10 +42,11 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext,
 ) {
   try {
-    const institutionId = parseInstitutionId(params.id);
+    const { id } = await context.params;
+    const institutionId = parseInstitutionId(id);
     const body = (await request.json()) as Record<string, unknown>;
 
     const updateData = Object.fromEntries(
@@ -78,10 +82,11 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext,
 ) {
   try {
-    const institutionId = parseInstitutionId(params.id);
+    const { id } = await context.params;
+    const institutionId = parseInstitutionId(id);
 
     const [deleted] = await db
       .delete(institutions)
