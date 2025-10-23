@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-import { db } from '@/db';
-import { leadProgramInterests, leads } from '@/db/schema';
+import { db } from "@/db";
+import { leadProgramInterests, leads } from "@/db/schema";
 
 interface LeadPayload {
   fullName: string;
@@ -29,34 +29,41 @@ interface LeadPayload {
   selectedPrograms: number[];
 }
 
-const REQUIRED_FIELDS: Array<keyof LeadPayload> = ['fullName', 'email', 'phone'];
+const REQUIRED_FIELDS: Array<keyof LeadPayload> = [
+  "fullName",
+  "email",
+  "phone",
+];
 
-const parseNumeric = (value: string) => {
+const parseNumeric = (value: string): string | null => {
   if (!value) return null;
   const converted = Number(value);
-  return Number.isNaN(converted) ? null : converted;
+  return Number.isNaN(converted) ? null : String(converted);
 };
 
 export async function POST(request: NextRequest) {
   try {
     const payload = (await request.json()) as LeadPayload;
 
-    const missing = REQUIRED_FIELDS.filter((field) => !payload[field] || payload[field].toString().trim().length === 0);
+    const missing = REQUIRED_FIELDS.filter(
+      (field) =>
+        !payload[field] || payload[field].toString().trim().length === 0
+    );
     if (missing.length > 0) {
       return NextResponse.json(
-        { error: `Missing required fields: ${missing.join(', ')}` },
-        { status: 400 },
+        { error: `Missing required fields: ${missing.join(", ")}` },
+        { status: 400 }
       );
     }
 
-    const phone = payload.phone.replace(/\D/g, '').slice(0, 15);
+    const phone = payload.phone.replace(/\D/g, "").slice(0, 15);
 
     const leadInsert = {
       fullName: payload.fullName.trim(),
       gender: payload.gender || null,
       email: payload.email.trim(),
       phone,
-      dob: payload.dob ? new Date(payload.dob) : null,
+      dob: payload.dob || null,
       state: payload.state || null,
       city: payload.city || null,
       employmentStatus: payload.employmentStatus || null,
@@ -72,15 +79,21 @@ export async function POST(request: NextRequest) {
       category: payload.category || null,
       experienceYears: parseNumeric(payload.experienceYears),
       preferredMode: payload.preferredMode || null,
-      source: payload.source || 'website',
+      source: payload.source || "website",
       utmCampaign: payload.utmCampaign || null,
-      status: 'new',
+      status: "new",
     } satisfies typeof leads.$inferInsert;
 
     const [createdLead] = await db.insert(leads).values(leadInsert).returning();
 
-    if (createdLead && Array.isArray(payload.selectedPrograms) && payload.selectedPrograms.length > 0) {
-      const uniquePrograms = Array.from(new Set(payload.selectedPrograms.filter((id) => Number.isInteger(id))));
+    if (
+      createdLead &&
+      Array.isArray(payload.selectedPrograms) &&
+      payload.selectedPrograms.length > 0
+    ) {
+      const uniquePrograms = Array.from(
+        new Set(payload.selectedPrograms.filter((id) => Number.isInteger(id)))
+      );
 
       if (uniquePrograms.length > 0) {
         await db
@@ -90,17 +103,23 @@ export async function POST(request: NextRequest) {
               leadId: createdLead.id,
               programId,
               notes: null,
-            })),
+            }))
           )
           .onConflictDoNothing({
-            target: [leadProgramInterests.leadId, leadProgramInterests.programId],
+            target: [
+              leadProgramInterests.leadId,
+              leadProgramInterests.programId,
+            ],
           });
       }
     }
 
     return NextResponse.json({ success: true, leadId: createdLead?.id });
   } catch (error) {
-    console.error('Lead submission error:', error);
-    return NextResponse.json({ error: 'Unable to submit lead right now.' }, { status: 500 });
+    console.error("Lead submission error:", error);
+    return NextResponse.json(
+      { error: "Unable to submit lead right now." },
+      { status: 500 }
+    );
   }
 }

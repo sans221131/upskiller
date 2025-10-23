@@ -12,12 +12,15 @@ function parseProgramId(id: string) {
   return programId;
 }
 
+type RouteContext = { params: Promise<{ id: string }> };
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext,
 ) {
   try {
-    const programId = parseProgramId(params.id);
+    const { id } = await context.params;
+    const programId = parseProgramId(id);
 
     const program = await db
       .select({
@@ -45,10 +48,11 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext,
 ) {
   try {
-    const programId = parseProgramId(params.id);
+    const { id } = await context.params;
+    const programId = parseProgramId(id);
     const body = (await request.json()) as Record<string, unknown>;
 
     const updateData = Object.fromEntries(
@@ -84,10 +88,11 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext,
 ) {
   try {
-    const programId = parseProgramId(params.id);
+    const { id } = await context.params;
+    const programId = parseProgramId(id);
 
     const [deleted] = await db
       .delete(programs)
