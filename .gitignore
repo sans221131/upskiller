@@ -67,3 +67,4 @@ build/
 
 # Next image cache
 .next/cache/images
+.env
