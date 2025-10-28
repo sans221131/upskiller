@@ -51,6 +51,11 @@ export default function HeroClient({ programs }: Props) {
         })
       : "Open";
 
+  const capitalize = (s?: string | null) => {
+    if (!s) return s || '';
+    return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  };
+
   return (
     <section className="pt-12 sm:pt-20 md:pt-32 pb-12 px-4 sm:px-6 bg-gradient-to-b from-blue-50 via-white to-slate-50">
       <div className="max-w-7xl mx-auto">
@@ -133,7 +138,7 @@ export default function HeroClient({ programs }: Props) {
                               {p.title}
                             </h3>
                             <div className="mt-2 text-sm opacity-90">
-                              {p.mode} {p.duration ? `• ${p.duration}` : ""}
+                              {p.mode ? capitalize(p.mode) : '—'} {p.duration ? `• ${p.duration}` : ""}
                             </div>
                           </div>
 
@@ -180,7 +185,7 @@ export default function HeroClient({ programs }: Props) {
                                   Mode
                                 </dt>
                                 <dd className="text-sm font-semibold text-slate-900 truncate">
-                                  {p.mode || "—"}
+                                  {p.mode ? capitalize(p.mode) : "—"}
                                 </dd>
                               </div>
                               <div className="bg-slate-50 rounded-lg p-2.5">

@@ -128,7 +128,7 @@ export default async function FeaturedPrograms({ title, subtitle }: FeaturedProg
   {/* Mobile: show two cards per row for a denser grid; keep md+ layout unchanged */}
   <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {items.slice(0, 6).map((p, idx) => (
-            <div key={idx} className={"group relative bg-white rounded-3xl border border-slate-100 p-3 md:p-6 shadow-sm overflow-hidden transition-all hover:shadow-lg flex flex-col h-full min-h-[14rem]"}>
+            <div key={idx} className={"group relative bg-white rounded-3xl border border-slate-100 p-3 md:p-6 shadow-sm overflow-hidden transition-all hover:shadow-lg flex flex-col h-full min-h-[14rem] pb-12 md:pb-0"}>
               {/* card content - no permanent bottom whitespace; padding added on hover */}
               <div className="flex flex-col justify-between pb-0 group-hover:pb-16 transition-all duration-200">
                 <div className="flex-1">
@@ -175,8 +175,8 @@ export default async function FeaturedPrograms({ title, subtitle }: FeaturedProg
 
                 </div>
 
-                {/* Visible View button for mobile (desktop keeps hover action bar) */}
-                <div className="mt-3 md:hidden">
+                {/* Visible View button for mobile (desktop keeps hover action bar) - absolute to align with other cards */}
+                <div className="absolute left-4 right-4 bottom-4 md:hidden">
                   <a href={`/programs/${p.id}`} className="inline-block w-full text-center bg-[var(--brand)] text-white px-3 py-2 rounded-full font-semibold">View</a>
                 </div>
               </div>

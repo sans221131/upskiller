@@ -305,7 +305,7 @@ export default function ProgramCatalog({ programs, initialQuery = '' }: { progra
             return (
               <article
                 key={program.id}
-                className="group relative flex h-full flex-col justify-between rounded-3xl border border-slate-100 bg-white p-3 md:p-8 shadow-sm overflow-hidden transition-all hover:shadow-lg min-h-[14rem]"
+                className="group relative flex h-full flex-col justify-between rounded-3xl border border-slate-100 bg-white p-3 md:p-8 shadow-sm overflow-hidden transition-all hover:shadow-lg min-h-[14rem] pb-12 md:pb-0"
               >
                 {/* top content: no permanent bottom whitespace; add padding only on hover so the action row can slide in */}
                 <div className="flex flex-col justify-between pb-0 group-hover:pb-16 transition-all duration-200">
@@ -397,8 +397,8 @@ export default function ProgramCatalog({ programs, initialQuery = '' }: { progra
                     {/* highlights removed as per design: no bullet list shown */}
                   </div>
 
-                  {/* Visible View button for mobile (desktop keeps hover action bar) */}
-                  <div className="mt-3 md:hidden">
+                  {/* Visible View button for mobile (desktop keeps hover action bar) - absolute so all cards align */}
+                  <div className="absolute left-4 right-4 bottom-4 md:hidden">
                     <a href={`/programs/${program.id}`} className="inline-block w-full text-center bg-[var(--brand)] text-white px-3 py-2 rounded-full font-semibold">View</a>
                   </div>
                 </div>
