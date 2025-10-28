@@ -40,65 +40,63 @@ async function getPrograms(): Promise<ProgramSummary[]> {
 
 export const revalidate = 300;
 
+import Navigation from "../components/Navigation";
+import Footer from "../components/Footer";
+
 export default async function ProgramsPage() {
   const programs = await getPrograms();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      {/* Header */}
-      <nav className="border-b border-slate-200 bg-white">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-emerald-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">U</span>
-            </div>
-            <span className="text-xl font-bold text-slate-900">Upskillers</span>
-          </a>
-          <a
-            href="/lead-form"
-            className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-full text-sm font-medium transition-all"
-          >
-            Get Matched
-          </a>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-white">
+      <Navigation />
 
       {/* Hero */}
-      <section className="py-20 px-6">
+      <section className="pt-32 pb-12 px-6 bg-gradient-to-b from-[var(--brand)]/5 to-white">
         <div className="max-w-7xl mx-auto text-center">
+          <div className="inline-block mb-4 px-4 py-2 bg-[var(--brand)]/10 text-[var(--brand)] rounded-full text-sm font-semibold">
+            {programs.length}+ MBA Programs Available
+          </div>
           <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6">
-            Explore Our Programs
+            Find Your Perfect MBA Program
           </h1>
           <p className="text-xl text-slate-600 mb-12 max-w-3xl mx-auto">
-            Browse through 60+ carefully curated programs from top institutions.
-            Find the perfect match for your career goals.
+            Compare fees, specializations, and universities across India's top online MBA programs
           </p>
 
           {/* CTA */}
-          <div className="bg-teal-50 border-2 border-teal-200 rounded-2xl p-8 max-w-2xl mx-auto">
+          <div className="bg-gradient-to-br from-[var(--brand)]/5 to-[var(--brand)]/10 border-2 border-[var(--brand)]/10 rounded-2xl p-8 max-w-2xl mx-auto">
             <h3 className="text-2xl font-bold text-slate-900 mb-3">
-              Get Personalized Recommendations
+              Not Sure Where to Start?
             </h3>
             <p className="text-slate-600 mb-6">
-              Answer a few questions and we'll match you with programs that fit
-              your profile, budget, and goals.
+              Get personalized program recommendations based on your career goals, budget, and eligibility
             </p>
             <a
               href="/lead-form"
-              className="inline-block bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-full font-semibold transition-all"
+              className="inline-block bg-[var(--brand)] hover:bg-[var(--brand)]/90 text-white px-8 py-4 rounded-full font-semibold transition-all shadow-lg hover:shadow-xl"
             >
-              Start Assessment (2 mins)
+              Get Free Counselling
             </a>
           </div>
         </div>
       </section>
 
-      {/* Program Grid */}
+      {/* Program Finder/Filter + Grid */}
       <section className="py-12 px-6">
         <div className="max-w-7xl mx-auto">
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">
+              All MBA Programs
+            </h2>
+            <p className="text-slate-600">
+              Use filters below to narrow down your options
+            </p>
+          </div>
           <ProgramCatalog programs={programs} />
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 }

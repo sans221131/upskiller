@@ -147,7 +147,7 @@ export default function StepRecommendations({ data, updateData, onNext, onBack }
   if (loading) {
     return (
       <div className="py-16 text-center">
-        <div className="mx-auto mb-6 h-12 w-12 animate-spin rounded-full border-2 border-teal-500 border-b-transparent" />
+          <div className="mx-auto mb-6 h-12 w-12 animate-spin rounded-full border-2 border-[var(--brand)] border-b-transparent" />
         <p className="text-sm font-medium uppercase tracking-[0.28em] text-slate-400">matching in progress</p>
         <p className="mt-3 text-base text-slate-600">We’re analysing degree, format, and ROI signals for you.</p>
       </div>
@@ -182,13 +182,13 @@ export default function StepRecommendations({ data, updateData, onNext, onBack }
               <article
                 key={program.id}
                 className={`relative flex flex-col gap-6 rounded-3xl border px-6 py-6 transition-all ${
-                  isSelected ? 'border-teal-500 bg-teal-50 shadow-sm' : 'border-slate-200 hover:border-teal-300 hover:bg-slate-50'
-                }`}
+                    isSelected ? 'border-[var(--brand)] bg-[var(--brand)]/10 shadow-sm' : 'border-slate-200 hover:border-[var(--brand)] hover:bg-slate-50'
+                  }`}
               >
-                <span
-                  aria-hidden
+                  <span
+                    aria-hidden
                   className={`absolute left-0 top-4 bottom-4 w-1.5 rounded-full ${
-                    isSelected ? 'bg-teal-500' : 'bg-teal-200'
+                    isSelected ? 'bg-[var(--brand)]' : 'bg-[var(--brand)]/30'
                   }`}
                 />
                 <div className="pl-3 sm:pl-4">
@@ -199,10 +199,10 @@ export default function StepRecommendations({ data, updateData, onNext, onBack }
                   >
                   <div className="space-y-2">
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className="rounded-full bg-[hsl(173,70%,94%)] px-3 py-1 text-[0.65rem] font-semibold tracking-[0.18em] text-[hsl(172,60%,32%)]">
+                          <span className="rounded-full px-3 py-1 text-[0.65rem] font-semibold tracking-[0.18em] bg-[var(--brand)]/8 text-[var(--brand)]">
                         {program.degreeType}
                       </span>
-                      <span className="rounded-full bg-[hsl(204,80%,96%)] px-3 py-1 text-[0.65rem] font-semibold tracking-[0.18em] text-[hsl(205,50%,40%)]">
+                          <span className="rounded-full px-3 py-1 text-[0.65rem] font-semibold tracking-[0.18em] bg-[var(--brand)]/8 text-[var(--brand)]">
                         {program.fitScore}% fit
                       </span>
                     </div>
@@ -219,7 +219,7 @@ export default function StepRecommendations({ data, updateData, onNext, onBack }
                     }`}
                     aria-hidden
                   >
-                    ✓
+                            ✓
                   </span>
                 </button>
 
@@ -248,7 +248,7 @@ export default function StepRecommendations({ data, updateData, onNext, onBack }
                       <ul className="space-y-2 text-sm leading-relaxed text-slate-600">
                         {bulletPoints.map((point, index) => (
                           <li key={index} className="flex gap-3">
-                            <span className="mt-[6px] inline-block h-1.5 w-1.5 flex-shrink-0 rounded-full bg-teal-500" />
+                            <span className="mt-[6px] inline-block h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[var(--brand)]" />
                             <span>{point}</span>
                           </li>
                         ))}
@@ -261,8 +261,8 @@ export default function StepRecommendations({ data, updateData, onNext, onBack }
         </div>
       ) : null}
 
-      <div className="flex flex-col gap-3 rounded-2xl border border-teal-100 bg-teal-50/70 p-5 text-sm text-teal-700">
-        <p className="font-semibold text-teal-800">What happens after you choose?</p>
+      <div className="flex flex-col gap-3 rounded-2xl border border-[var(--brand)]/20 bg-[var(--brand)]/6 p-5 text-sm text-[var(--brand)]">
+        <p className="font-semibold text-[var(--brand)]">What happens after you choose?</p>
         <ul className="space-y-2 text-sm leading-relaxed">
           <li>• A mentor will call with deeper batch details, placements, and scholarships for your picks.</li>
           <li>• We can add more programs once we speak, so pick what looks interesting now.</li>
@@ -281,7 +281,7 @@ export default function StepRecommendations({ data, updateData, onNext, onBack }
           type="button"
           onClick={handleContinue}
           disabled={programs.length > 0 && selectedIds.length === 0}
-          className="w-full rounded-full bg-slate-900 px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          className="w-full rounded-full bg-[var(--brand)] px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           {programs.length > 0 ? 'Continue to Contact' : 'Continue — we’ll curate more' }
         </button>

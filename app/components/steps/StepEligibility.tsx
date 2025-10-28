@@ -58,7 +58,7 @@ export default function StepEligibility({ data, updateData, onNext, onBack }: St
         <select
           value={data.highestQualification}
           onChange={(event) => updateData({ highestQualification: event.target.value })}
-          className="w-full rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+          className="w-full rounded-xl border border-slate-200 px-4 py-3 text-base text-black shadow-sm focus:border-[var(--brand)] focus:outline-none"
           required
         >
           <option value="">Select the closest option…</option>
@@ -84,7 +84,7 @@ export default function StepEligibility({ data, updateData, onNext, onBack }: St
             max="100"
             value={data.lastScorePercent}
             onChange={(event) => updateData({ lastScorePercent: event.target.value })}
-            className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+            className="rounded-xl border border-slate-200 px-4 py-3 text-base text-black shadow-sm focus:border-[var(--brand)] focus:outline-none"
             placeholder="e.g. 75 or 7.5"
           />
           <span className="text-xs text-slate-500">Enter the value in percentage or CGPA — whichever is easier.</span>
@@ -106,8 +106,8 @@ export default function StepEligibility({ data, updateData, onNext, onBack }: St
                 onClick={() => updateData({ category })}
                 className={`rounded-xl border px-4 py-3 text-sm font-medium transition-all ${
                   isActive
-                    ? 'border-teal-500 bg-teal-50 text-teal-700 shadow-sm'
-                    : 'border-slate-200 text-slate-600 hover:border-teal-300 hover:text-teal-700'
+                    ? 'border-[var(--brand)] bg-[var(--brand)]/10 text-[var(--brand)] shadow-sm'
+                    : 'border-slate-200 text-slate-600 hover:border-[var(--brand)] hover:text-[var(--brand)]'
                 }`}
               >
                 {category}
@@ -131,8 +131,8 @@ export default function StepEligibility({ data, updateData, onNext, onBack }: St
                 onClick={() => updateData({ budgetRange: budget })}
                 className={`rounded-xl border px-4 py-3 text-sm font-medium transition-all ${
                   isActive
-                    ? 'border-teal-500 bg-teal-50 text-teal-700 shadow-sm'
-                    : 'border-slate-200 text-slate-600 hover:border-teal-300 hover:text-teal-700'
+                    ? 'border-[var(--brand)] bg-[var(--brand)]/10 text-[var(--brand)] shadow-sm'
+                    : 'border-slate-200 text-slate-600 hover:border-[var(--brand)] hover:text-[var(--brand)]'
                 }`}
               >
                 {budget}
@@ -143,12 +143,12 @@ export default function StepEligibility({ data, updateData, onNext, onBack }: St
       </section>
 
       <section>
-        <label className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4 transition-all hover:border-teal-300">
+  <label className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4 transition-all hover:border-[var(--brand)]">
           <input
             type="checkbox"
             checked={data.wantsEmi}
             onChange={(event) => updateData({ wantsEmi: event.target.checked })}
-            className="mt-1 h-5 w-5 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
+            className="mt-1 h-5 w-5 rounded border-slate-300 text-[var(--brand)] focus:ring-[var(--brand)]"
           />
           <div className="space-y-1">
             <p className="text-sm font-semibold text-slate-900">Show me EMI or pay-later options</p>
@@ -159,9 +159,9 @@ export default function StepEligibility({ data, updateData, onNext, onBack }: St
         </label>
       </section>
 
-      <aside className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-5">
-        <p className="text-sm font-semibold text-emerald-800">Scholarship & aid match</p>
-        <p className="mt-1 text-sm leading-relaxed text-emerald-700">
+      <aside className="rounded-2xl border border-[var(--brand)]/20 bg-[var(--brand)]/6 p-5">
+        <p className="text-sm font-semibold text-[var(--brand)]">Scholarship & aid match</p>
+        <p className="mt-1 text-sm leading-relaxed text-[var(--brand)]">
           With these details we auto-check institutional scholarships, alumni grants, and corporate sponsorship programs you can apply for.
         </p>
       </aside>
@@ -170,14 +170,14 @@ export default function StepEligibility({ data, updateData, onNext, onBack }: St
         <button
           type="button"
           onClick={onBack}
-          className="w-full rounded-full border border-slate-300 px-6 py-4 text-sm font-semibold text-slate-700 transition-all hover:border-teal-400 hover:text-teal-700 sm:w-auto"
+          className="w-full rounded-full border border-slate-300 px-6 py-4 text-sm font-semibold text-slate-700 transition-all hover:border-[var(--brand)] hover:text-[var(--brand)] sm:w-auto"
         >
           Back
         </button>
         <button
           type="submit"
           disabled={!data.highestQualification || !data.budgetRange}
-          className="w-full rounded-full bg-slate-900 px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          className="w-full rounded-full bg-[var(--brand)] px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           See Recommendations
         </button>

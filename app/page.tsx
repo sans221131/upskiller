@@ -1,28 +1,32 @@
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
-import ScrollingBadges from './components/ScrollingBadges';
-import Features from './components/Features';
-import Journey from './components/Journey';
-import CareerTransformation from './components/CareerTransformation';
-import Tools from './components/Tools';
+import UniversityStrip from './components/UniversityStrip';
+import FeaturedPrograms from './components/FeaturedPrograms';
 import ProcessSteps from './components/ProcessSteps';
+import Reviews from './components/Reviews';
+import BrochureResources from './components/BrochureResources';
 import FAQ from './components/FAQ';
-import FinalCTA from './components/FinalCTA';
 import Footer from './components/Footer';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-white">
       <Navigation />
       <Hero />
-      <ScrollingBadges />
-      <Features />
-      <Journey />
-      <CareerTransformation />
-      <Tools />
+      <section id="universities">
+        <UniversityStrip />
+      </section>
+      <section id="featured">
+        <FeaturedPrograms />
+      </section>
       <ProcessSteps />
-      <FAQ />
-      <FinalCTA />
+      <section id="reviews">
+        <Reviews />
+      </section>
+      <section id="brochures">
+        <BrochureResources />
+      </section>
+  <FAQ />
       <Footer />
     </div>
   );

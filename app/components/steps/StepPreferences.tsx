@@ -70,8 +70,8 @@ export default function StepPreferences({ data, updateData, onNext, onBack }: St
                 onClick={() => updateData({ degreeInterest: degree.value })}
                 className={`rounded-2xl border px-5 py-4 text-left transition-all ${
                   isActive
-                    ? 'border-teal-500 bg-teal-50 shadow-sm'
-                    : 'border-slate-200 hover:border-teal-300 hover:bg-teal-50/40'
+                    ? 'border-[var(--brand)] bg-[var(--brand)]/10 shadow-sm'
+                    : 'border-slate-200 hover:border-[var(--brand)] hover:bg-[var(--brand)]/6'
                 }`}
               >
                 <p className="text-base font-semibold text-slate-900">{degree.label}</p>
@@ -96,8 +96,8 @@ export default function StepPreferences({ data, updateData, onNext, onBack }: St
                 onClick={() => updateData({ preferredMode: mode.value })}
                 className={`rounded-2xl border px-4 py-5 text-center transition-all ${
                   isActive
-                    ? 'border-teal-500 bg-teal-50 shadow-sm'
-                    : 'border-slate-200 hover:border-teal-300 hover:bg-teal-50/40'
+                    ? 'border-[var(--brand)] bg-[var(--brand)]/10 shadow-sm'
+                    : 'border-slate-200 hover:border-[var(--brand)] hover:bg-[var(--brand)]/6'
                 }`}
               >
                 <span className="mb-2 block text-2xl leading-none">{mode.icon}</span>
@@ -125,10 +125,10 @@ export default function StepPreferences({ data, updateData, onNext, onBack }: St
                 type="button"
                 onClick={() => updateData({ specialisationInterest: specialisation })}
                 className={`rounded-xl border px-4 py-3 text-sm font-medium transition-all ${
-                  isActive
-                    ? 'border-teal-500 bg-teal-50 text-teal-700 shadow-sm'
-                    : 'border-slate-200 text-slate-600 hover:border-teal-300 hover:text-teal-700'
-                }`}
+                      isActive
+                        ? 'border-[var(--brand)] bg-[var(--brand)]/10 text-[var(--brand)] shadow-sm'
+                        : 'border-slate-200 text-slate-600 hover:border-[var(--brand)] hover:text-[var(--brand)]'
+                    }`}
               >
                 {specialisation}
               </button>
@@ -144,15 +144,15 @@ export default function StepPreferences({ data, updateData, onNext, onBack }: St
             type="text"
             value={data.coursePreference}
             onChange={(event) => updateData({ coursePreference: event.target.value })}
-            className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+            className="rounded-xl border border-slate-200 px-4 py-3 text-base text-black shadow-sm focus:border-[var(--brand)] focus:outline-none"
             placeholder="Optional — helps us compare side-by-side"
           />
         </label>
       </section>
 
-      <aside className="rounded-2xl border border-blue-100 bg-blue-50/70 p-5">
-        <p className="text-sm font-semibold text-blue-800">Not sure about specialisations yet?</p>
-        <p className="mt-1 text-sm leading-relaxed text-blue-700">
+      <aside className="rounded-2xl border border-[var(--brand)]/20 bg-[var(--brand)]/6 p-5">
+        <p className="text-sm font-semibold text-[var(--brand)]">Not sure about specialisations yet?</p>
+        <p className="mt-1 text-sm leading-relaxed text-[var(--brand)]">
           Pick “Not sure yet” and your counsellor will co-design a track based on trending roles, salary outlook, and your background.
         </p>
       </aside>
@@ -161,14 +161,14 @@ export default function StepPreferences({ data, updateData, onNext, onBack }: St
         <button
           type="button"
           onClick={onBack}
-          className="w-full rounded-full border border-slate-300 px-6 py-4 text-sm font-semibold text-slate-700 transition-all hover:border-teal-400 hover:text-teal-700 sm:w-auto"
+          className="w-full rounded-full border border-slate-300 px-6 py-4 text-sm font-semibold text-slate-700 transition-all hover:border-[var(--brand)] hover:text-[var(--brand)] sm:w-auto"
         >
           Back
         </button>
         <button
           type="submit"
           disabled={!data.degreeInterest || !data.preferredMode}
-          className="w-full rounded-full bg-slate-900 px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          className="w-full rounded-full bg-[var(--brand)] px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           Continue to Eligibility
         </button>

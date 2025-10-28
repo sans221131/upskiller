@@ -481,60 +481,62 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-slate-50">
       {/* Top Navigation */}
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-8">
-              <Link href="/" className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-emerald-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">U</span>
-                </div>
+              <Link href="/" className="flex items-center gap-3">
+                <img src="/logo.jpg" alt="Upskillers" className="w-12 h-12 rounded-xl shadow-sm" />
                 <div>
                   <div className="text-lg font-bold text-slate-900">Upskillers</div>
                   <div className="text-xs text-slate-500">Admin Panel</div>
                 </div>
               </Link>
 
-              <div className="hidden md:flex gap-1">
+              <div className="hidden md:flex gap-2">
                 <button
                   onClick={() => setActiveTab('overview')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  className={`px-4 py-2 rounded-xl font-medium transition-all ${
                     activeTab === 'overview'
-                      ? 'bg-teal-50 text-teal-700'
+                      ? 'text-white shadow-lg'
                       : 'text-slate-600 hover:bg-slate-100'
                   }`}
+                  style={activeTab === 'overview' ? { backgroundColor: 'var(--brand)' } : {}}
                 >
                   Overview
                 </button>
                 <button
                   onClick={() => setActiveTab('leads')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  className={`px-4 py-2 rounded-xl font-medium transition-all ${
                     activeTab === 'leads'
-                      ? 'bg-teal-50 text-teal-700'
+                      ? 'text-white shadow-lg'
                       : 'text-slate-600 hover:bg-slate-100'
                   }`}
+                  style={activeTab === 'leads' ? { backgroundColor: 'var(--brand)' } : {}}
                 >
                   Leads
                 </button>
                 <button
                   onClick={() => setActiveTab('programs')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  className={`px-4 py-2 rounded-xl font-medium transition-all ${
                     activeTab === 'programs'
-                      ? 'bg-teal-50 text-teal-700'
+                      ? 'text-white shadow-lg'
                       : 'text-slate-600 hover:bg-slate-100'
                   }`}
+                  style={activeTab === 'programs' ? { backgroundColor: 'var(--brand)' } : {}}
                 >
                   Programs
                 </button>
                 <button
                   onClick={() => setActiveTab('institutions')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  className={`px-4 py-2 rounded-xl font-medium transition-all ${
                     activeTab === 'institutions'
-                      ? 'bg-teal-50 text-teal-700'
+                      ? 'text-white shadow-lg'
                       : 'text-slate-600 hover:bg-slate-100'
                   }`}
+                  style={activeTab === 'institutions' ? { backgroundColor: 'var(--brand)' } : {}}
                 >
                   Institutions
                 </button>
@@ -548,7 +550,7 @@ export default function AdminDashboard() {
               </div>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-all"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-medium transition-all"
               >
                 Logout
               </button>
@@ -564,9 +566,9 @@ export default function AdminDashboard() {
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {stats.map((stat, index) => (
-                <div key={index} className="bg-white rounded-2xl p-6 border border-slate-200">
+                <div key={index} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xl">
                   <div className="flex items-start justify-between mb-4">
-                    <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center text-2xl`}>
+                    <div className={`w-12 h-12 ${stat.color} rounded-2xl flex items-center justify-center text-2xl`}>
                       {stat.icon}
                     </div>
                     <span className="text-sm font-semibold text-emerald-600">{stat.change}</span>
@@ -578,13 +580,14 @@ export default function AdminDashboard() {
             </div>
 
             {/* Recent Leads */}
-            <div className="bg-white rounded-2xl border border-slate-200">
+            <div className="bg-white rounded-3xl border border-slate-200 shadow-xl">
               <div className="p-6 border-b border-slate-200">
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-bold text-slate-900">Recent Leads</h2>
                   <button 
                     onClick={() => setActiveTab('leads')}
-                    className="text-teal-600 hover:text-teal-700 font-medium text-sm"
+                    className="font-medium text-sm transition-all"
+                    style={{ color: 'var(--brand)' }}
                   >
                     View all →
                   </button>
@@ -625,7 +628,8 @@ export default function AdminDashboard() {
                               setSelectedLead(lead);
                               setShowLeadModal(true);
                             }}
-                            className="text-teal-600 hover:text-teal-700 font-medium text-sm"
+                            className="font-medium text-sm transition-all"
+                            style={{ color: 'var(--brand)' }}
                           >
                             View
                           </button>
@@ -639,38 +643,48 @@ export default function AdminDashboard() {
 
             {/* Quick Actions */}
             <div className="grid md:grid-cols-3 gap-6">
-              <div className="bg-gradient-to-br from-teal-500 to-emerald-500 rounded-2xl p-6 text-white">
-                <h3 className="text-lg font-bold mb-2">Add New Program</h3>
-                <p className="text-sm opacity-90 mb-4">Create a new program listing</p>
+              <div className="bg-white rounded-3xl p-6 shadow-xl border border-slate-200">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 text-white" style={{ backgroundColor: 'var(--brand)' }}>
+                  🎓
+                </div>
+                <h3 className="text-lg font-bold mb-2 text-slate-900">Add New Program</h3>
+                <p className="text-sm text-slate-600 mb-4">Create a new program listing</p>
                 <button 
                   onClick={() => {
                     setSelectedProgram(null);
                     setShowProgramModal(true);
                   }}
-                  className="bg-white text-teal-600 px-4 py-2 rounded-lg font-semibold hover:bg-slate-100 transition-all"
+                  className="px-4 py-2 rounded-xl font-semibold transition-all shadow-md text-white"
+                  style={{ backgroundColor: 'var(--brand)' }}
                 >
                   Add Program
                 </button>
               </div>
-              <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white">
-                <h3 className="text-lg font-bold mb-2">Export Leads</h3>
-                <p className="text-sm opacity-90 mb-4">Download leads data as CSV</p>
+              <div className="bg-white rounded-3xl p-6 shadow-xl border border-slate-200">
+                <div className="w-12 h-12 bg-purple-500 rounded-2xl flex items-center justify-center mb-4 text-white">
+                  📊
+                </div>
+                <h3 className="text-lg font-bold mb-2 text-slate-900">Export Leads</h3>
+                <p className="text-sm text-slate-600 mb-4">Download leads data as CSV</p>
                 <button 
                   onClick={handleExportLeads}
-                  className="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-slate-100 transition-all"
+                  className="bg-purple-500 text-white px-4 py-2 rounded-xl font-semibold hover:bg-purple-600 transition-all shadow-md"
                 >
                   Export Data
                 </button>
               </div>
-              <div className="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl p-6 text-white">
-                <h3 className="text-lg font-bold mb-2">Add Institution</h3>
-                <p className="text-sm opacity-90 mb-4">Register new partner</p>
+              <div className="bg-white rounded-3xl p-6 shadow-xl border border-slate-200">
+                <div className="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center mb-4 text-white">
+                  🏛️
+                </div>
+                <h3 className="text-lg font-bold mb-2 text-slate-900">Add Institution</h3>
+                <p className="text-sm text-slate-600 mb-4">Register new partner</p>
                 <button 
                   onClick={() => {
                     setSelectedInstitution(null);
                     setShowInstitutionModal(true);
                   }}
-                  className="bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:bg-slate-100 transition-all"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-600 transition-all shadow-md"
                 >
                   Add Partner
                 </button>
@@ -682,7 +696,7 @@ export default function AdminDashboard() {
         {activeTab === 'leads' && (
           <div className="space-y-6">
             {/* Leads Header */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-6">
+            <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xl">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                   <h2 className="text-2xl font-bold text-slate-900">All Leads</h2>
@@ -693,7 +707,7 @@ export default function AdminDashboard() {
                 <div className="flex gap-3">
                   <button
                     onClick={handleExportLeads}
-                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-all"
+                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-medium transition-all"
                   >
                     📥 Export CSV
                   </button>
@@ -707,12 +721,12 @@ export default function AdminDashboard() {
                   placeholder="Search by name, email, or phone..."
                   value={leadSearch}
                   onChange={(e) => setLeadSearch(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="flex-1 px-4 py-2 border border-slate-300 rounded-xl focus:outline-none transition-all focus:border-[var(--brand)] text-slate-900"
                 />
                 <select
                   value={leadStatusFilter}
                   onChange={(e) => setLeadStatusFilter(e.target.value)}
-                  className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="px-4 py-2 border border-slate-300 rounded-xl focus:outline-none transition-all focus:border-[var(--brand)]"
                 >
                   <option value="all">All Status</option>
                   <option value="new">New</option>
@@ -724,7 +738,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Leads Table */}
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xl">
               {loading ? (
                 <div className="p-12 text-center text-slate-500">Loading...</div>
               ) : filteredLeads.length === 0 ? (
@@ -767,7 +781,7 @@ export default function AdminDashboard() {
                             <select
                               value={lead.status}
                               onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
-                              className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(lead.status)} cursor-pointer`}
+                              className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(lead.status)} cursor-pointer text-slate-900`}
                             >
                               <option value="new">New</option>
                               <option value="contacted">Contacted</option>
@@ -785,7 +799,8 @@ export default function AdminDashboard() {
                                   setSelectedLead(lead);
                                   setShowLeadModal(true);
                                 }}
-                                className="text-teal-600 hover:text-teal-700 font-medium text-sm"
+                                className="font-medium text-sm transition-all"
+                                style={{ color: 'var(--brand)' }}
                               >
                                 View
                               </button>
@@ -810,7 +825,7 @@ export default function AdminDashboard() {
         {activeTab === 'programs' && (
           <div className="space-y-6">
             {/* Programs Header */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-6">
+            <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xl">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                   <h2 className="text-2xl font-bold text-slate-900">Programs</h2>
@@ -823,7 +838,8 @@ export default function AdminDashboard() {
                     setSelectedProgram(null);
                     setShowProgramModal(true);
                   }}
-                  className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-medium transition-all"
+                  className="px-4 py-2 text-white rounded-xl font-medium transition-all shadow-lg"
+                  style={{ backgroundColor: 'var(--brand)' }}
                 >
                   ➕ Add Program
                 </button>
@@ -836,24 +852,24 @@ export default function AdminDashboard() {
                   placeholder="Search programs by title, type, or institution..."
                   value={programSearch}
                   onChange={(e) => setProgramSearch(e.target.value)}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-xl focus:outline-none transition-all focus:border-[var(--brand)] text-slate-900"
                 />
               </div>
             </div>
 
             {/* Programs Grid */}
             {loading ? (
-              <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-500">
+              <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center text-slate-500 shadow-xl">
                 Loading...
               </div>
             ) : filteredPrograms.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-500">
+              <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center text-slate-500 shadow-xl">
                 No programs found
               </div>
             ) : (
               <div className="grid md:grid-cols-2 gap-6">
                 {filteredPrograms.map((program) => (
-                  <div key={program.id} className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-lg transition-all">
+                  <div key={program.id} className="bg-white rounded-3xl border border-slate-200 p-6 hover:shadow-xl transition-all shadow-lg">
                     <div className="flex items-start justify-between mb-4">
                       <div>
                         <span className="px-3 py-1 bg-teal-100 text-teal-700 text-xs font-semibold rounded-full">
@@ -871,7 +887,8 @@ export default function AdminDashboard() {
                             setSelectedProgram(program);
                             setShowProgramModal(true);
                           }}
-                          className="text-teal-600 hover:text-teal-700 font-medium text-sm"
+                          className="font-medium text-sm transition-all"
+                          style={{ color: 'var(--brand)' }}
                         >
                           Edit
                         </button>
@@ -927,7 +944,7 @@ export default function AdminDashboard() {
         {activeTab === 'institutions' && (
           <div className="space-y-6">
             {/* Institutions Header */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-6">
+            <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xl">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                   <h2 className="text-2xl font-bold text-slate-900">Institutions</h2>
@@ -940,7 +957,8 @@ export default function AdminDashboard() {
                     setSelectedInstitution(null);
                     setShowInstitutionModal(true);
                   }}
-                  className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-medium transition-all"
+                  className="px-4 py-2 text-white rounded-xl font-medium transition-all shadow-lg"
+                  style={{ backgroundColor: 'var(--brand)' }}
                 >
                   ➕ Add Institution
                 </button>
@@ -953,24 +971,24 @@ export default function AdminDashboard() {
                   placeholder="Search institutions by name or location..."
                   value={institutionSearch}
                   onChange={(e) => setInstitutionSearch(e.target.value)}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-xl focus:outline-none transition-all focus:border-[var(--brand)] text-slate-900"
                 />
               </div>
             </div>
 
             {/* Institutions Grid */}
             {loading ? (
-              <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-500">
+              <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center text-slate-500 shadow-xl">
                 Loading...
               </div>
             ) : filteredInstitutions.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-500">
+              <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center text-slate-500 shadow-xl">
                 No institutions found
               </div>
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredInstitutions.map((institution) => (
-                  <div key={institution.id} className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-lg transition-all">
+                  <div key={institution.id} className="bg-white rounded-3xl border border-slate-200 p-6 hover:shadow-xl transition-all shadow-lg">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-slate-900 mb-1">{institution.name}</h3>
@@ -982,7 +1000,8 @@ export default function AdminDashboard() {
                             setSelectedInstitution(institution);
                             setShowInstitutionModal(true);
                           }}
-                          className="text-teal-600 hover:text-teal-700 font-medium text-sm"
+                          className="font-medium text-sm transition-all"
+                          style={{ color: 'var(--brand)' }}
                         >
                           Edit
                         </button>
@@ -1035,7 +1054,7 @@ export default function AdminDashboard() {
       {/* Lead Detail Modal */}
       {showLeadModal && selectedLead && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
             <div className="p-6 border-b border-slate-200 flex items-center justify-between sticky top-0 bg-white">
               <h3 className="text-2xl font-bold text-slate-900">Lead Details</h3>
               <button
@@ -1133,7 +1152,7 @@ export default function AdminDashboard() {
               <div className="flex gap-3 pt-4">
                 <button
                   onClick={() => setShowLeadModal(false)}
-                  className="flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-all"
+                  className="flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-medium transition-all"
                 >
                   Close
                 </button>
@@ -1142,7 +1161,7 @@ export default function AdminDashboard() {
                     handleDeleteLead(selectedLead.id);
                     setShowLeadModal(false);
                   }}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all"
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-all"
                 >
                   Delete Lead
                 </button>
@@ -1155,7 +1174,7 @@ export default function AdminDashboard() {
       {/* Program Modal (Add/Edit) */}
       {showProgramModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <form onSubmit={handleCreateOrUpdateProgram} className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <form onSubmit={handleCreateOrUpdateProgram} className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
             <div className="p-6 border-b border-slate-200 flex items-center justify-between sticky top-0 bg-white">
               <h3 className="text-2xl font-bold text-slate-900">{selectedProgram ? 'Edit Program' : 'Add New Program'}</h3>
               <button type="button" onClick={() => setShowProgramModal(false)} className="text-slate-500 hover:text-slate-700">✕</button>
@@ -1164,18 +1183,18 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700">Title</label>
-                  <input value={programForm.title || ''} onChange={(e) => setProgramForm(f => ({ ...f, title: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg" />
+                  <input value={programForm.title || ''} onChange={(e) => setProgramForm(f => ({ ...f, title: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-xl focus:outline-none transition-all focus:border-[var(--brand)] text-slate-900" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700">Degree Type</label>
-                  <input value={programForm.degreeType || ''} onChange={(e) => setProgramForm(f => ({ ...f, degreeType: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg" />
+                  <input value={programForm.degreeType || ''} onChange={(e) => setProgramForm(f => ({ ...f, degreeType: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg text-slate-900" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700">Institution</label>
                   <select
                     value={programForm.institutionId ?? ''}
                     onChange={(e) => setProgramForm(f => ({ ...f, institutionId: Number(e.target.value) }))}
-                    className="mt-1 w-full px-3 py-2 border rounded-lg"
+                    className="mt-1 w-full px-3 py-2 border rounded-lg text-slate-900"
                     required
                   >
                     {institutions.length === 0 ? (
@@ -1193,7 +1212,7 @@ export default function AdminDashboard() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700">Delivery Mode</label>
-                  <select value={programForm.deliveryMode || 'online'} onChange={(e) => setProgramForm(f => ({ ...f, deliveryMode: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg">
+                  <select value={programForm.deliveryMode || 'online'} onChange={(e) => setProgramForm(f => ({ ...f, deliveryMode: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg text-slate-900">
                     <option value="online">Online</option>
                     <option value="blended">Blended</option>
                     <option value="weekend">Weekend</option>
@@ -1202,21 +1221,21 @@ export default function AdminDashboard() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700">Duration (months)</label>
-                  <input type="number" value={programForm.durationMonths || 24} onChange={(e) => setProgramForm(f => ({ ...f, durationMonths: Number(e.target.value) }))} className="mt-1 w-full px-3 py-2 border rounded-lg" />
+                  <input type="number" value={programForm.durationMonths || 24} onChange={(e) => setProgramForm(f => ({ ...f, durationMonths: Number(e.target.value) }))} className="mt-1 w-full px-3 py-2 border rounded-lg text-slate-900" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700">Total Fee (₹)</label>
-                  <input type="number" value={programForm.totalFee || 0} onChange={(e) => setProgramForm(f => ({ ...f, totalFee: Number(e.target.value) }))} className="mt-1 w-full px-3 py-2 border rounded-lg" />
+                  <input type="number" value={programForm.totalFee || 0} onChange={(e) => setProgramForm(f => ({ ...f, totalFee: Number(e.target.value) }))} className="mt-1 w-full px-3 py-2 border rounded-lg text-slate-900" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700">Application Fee (₹)</label>
-                  <input type="number" value={programForm.applicationFee || 0} onChange={(e) => setProgramForm(f => ({ ...f, applicationFee: Number(e.target.value) }))} className="mt-1 w-full px-3 py-2 border rounded-lg" />
+                  <input type="number" value={programForm.applicationFee || 0} onChange={(e) => setProgramForm(f => ({ ...f, applicationFee: Number(e.target.value) }))} className="mt-1 w-full px-3 py-2 border rounded-lg text-slate-900" />
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-slate-700">Highlights</label>
-                <textarea value={programForm.highlights || ''} onChange={(e) => setProgramForm(f => ({ ...f, highlights: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg" rows={3} />
+                <textarea value={programForm.highlights || ''} onChange={(e) => setProgramForm(f => ({ ...f, highlights: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg text-slate-900" rows={3} />
               </div>
 
               <div className="flex items-center gap-4">
@@ -1231,8 +1250,8 @@ export default function AdminDashboard() {
               </div>
 
               <div className="flex gap-3">
-                <button type="button" onClick={() => setShowProgramModal(false)} className="flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg">{selectedProgram ? 'Save Changes' : 'Create Program'}</button>
+                <button type="button" onClick={() => setShowProgramModal(false)} className="flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">Cancel</button>
+                <button type="submit" className="px-4 py-2 text-white rounded-xl shadow-lg" style={{ backgroundColor: 'var(--brand)' }}>{selectedProgram ? 'Save Changes' : 'Create Program'}</button>
               </div>
             </div>
           </form>
@@ -1242,7 +1261,7 @@ export default function AdminDashboard() {
       {/* Institution Modal (Add/Edit) */}
       {showInstitutionModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <form onSubmit={handleCreateOrUpdateInstitution} className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <form onSubmit={handleCreateOrUpdateInstitution} className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
             <div className="p-6 border-b border-slate-200 flex items-center justify-between sticky top-0 bg-white">
               <h3 className="text-2xl font-bold text-slate-900">{selectedInstitution ? 'Edit Institution' : 'Add New Institution'}</h3>
               <button type="button" onClick={() => setShowInstitutionModal(false)} className="text-slate-500 hover:text-slate-700">✕</button>
@@ -1250,34 +1269,34 @@ export default function AdminDashboard() {
             <div className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700">Name</label>
-                <input value={institutionForm.name || ''} onChange={(e) => setInstitutionForm(f => ({ ...f, name: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg" />
+                <input value={institutionForm.name || ''} onChange={(e) => setInstitutionForm(f => ({ ...f, name: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg text-slate-900" />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700">Slug</label>
-                  <input value={institutionForm.slug || ''} onChange={(e) => setInstitutionForm(f => ({ ...f, slug: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg" />
+                  <input value={institutionForm.slug || ''} onChange={(e) => setInstitutionForm(f => ({ ...f, slug: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg text-slate-900" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700">Location</label>
-                  <input value={institutionForm.location || ''} onChange={(e) => setInstitutionForm(f => ({ ...f, location: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg" />
+                  <input value={institutionForm.location || ''} onChange={(e) => setInstitutionForm(f => ({ ...f, location: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg text-slate-900" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700">Website</label>
-                  <input value={institutionForm.website || ''} onChange={(e) => setInstitutionForm(f => ({ ...f, website: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg" />
+                  <input value={institutionForm.website || ''} onChange={(e) => setInstitutionForm(f => ({ ...f, website: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg text-slate-900" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700">Established Year</label>
-                  <input type="number" value={institutionForm.establishedYear || new Date().getFullYear()} onChange={(e) => setInstitutionForm(f => ({ ...f, establishedYear: Number(e.target.value) }))} className="mt-1 w-full px-3 py-2 border rounded-lg" />
+                  <input type="number" value={institutionForm.establishedYear || new Date().getFullYear()} onChange={(e) => setInstitutionForm(f => ({ ...f, establishedYear: Number(e.target.value) }))} className="mt-1 w-full px-3 py-2 border rounded-lg text-slate-900" />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700">Short Description</label>
-                <textarea value={institutionForm.shortDescription || ''} onChange={(e) => setInstitutionForm(f => ({ ...f, shortDescription: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg" rows={3} />
+                <textarea value={institutionForm.shortDescription || ''} onChange={(e) => setInstitutionForm(f => ({ ...f, shortDescription: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg text-slate-900" rows={3} />
               </div>
 
               <div className="flex gap-3">
-                <button type="button" onClick={() => setShowInstitutionModal(false)} className="flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg">{selectedInstitution ? 'Save Changes' : 'Create Institution'}</button>
+                <button type="button" onClick={() => setShowInstitutionModal(false)} className="flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">Cancel</button>
+                <button type="submit" className="px-4 py-2 text-white rounded-xl shadow-lg" style={{ backgroundColor: 'var(--brand)' }}>{selectedInstitution ? 'Save Changes' : 'Create Institution'}</button>
               </div>
             </div>
           </form>

@@ -87,7 +87,7 @@ export default function StepContact({ data, updateData, onSubmit, onBack, isSubm
             type="text"
             value={data.fullName}
             onChange={(event) => updateData({ fullName: event.target.value })}
-            className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+            className="rounded-xl border border-slate-200 px-4 py-3 text-base text-black shadow-sm focus:border-[var(--brand)] focus:outline-none"
             placeholder="e.g. Ayesha Sharma"
             required
           />
@@ -98,14 +98,14 @@ export default function StepContact({ data, updateData, onSubmit, onBack, isSubm
             type="email"
             value={data.email}
             onChange={(event) => updateData({ email: event.target.value })}
-            className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+            className="rounded-xl border border-slate-200 px-4 py-3 text-base text-black shadow-sm focus:border-[var(--brand)] focus:outline-none"
             placeholder="you@example.com"
             required
           />
         </label>
         <label className="flex flex-col gap-2">
           <span className="text-sm font-medium text-slate-700">Mobile number <span className="text-rose-500">*</span></span>
-          <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 shadow-sm focus-within:border-teal-500">
+          <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 shadow-sm focus-within:border-[var(--brand)]">
             <span className="text-sm font-semibold text-slate-500">+91</span>
             <input
               type="tel"
@@ -113,7 +113,7 @@ export default function StepContact({ data, updateData, onSubmit, onBack, isSubm
               onChange={(event) =>
                 updateData({ phone: event.target.value.replace(/\D/g, '').slice(0, 10) })
               }
-              className="w-full border-none text-base focus:outline-none"
+              className="w-full border-none text-base text-black focus:outline-none"
               placeholder="9876543210"
               maxLength={10}
               required
@@ -127,7 +127,7 @@ export default function StepContact({ data, updateData, onSubmit, onBack, isSubm
             <select
               value={data.state}
               onChange={(event) => updateData({ state: event.target.value })}
-              className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+              className="rounded-xl border border-slate-200 px-4 py-3 text-base text-black shadow-sm focus:border-[var(--brand)] focus:outline-none"
               required
             >
               <option value="">Select state…</option>
@@ -158,7 +158,7 @@ export default function StepContact({ data, updateData, onSubmit, onBack, isSubm
           <select
             value={data.source}
             onChange={(event) => updateData({ source: event.target.value })}
-            className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+            className="rounded-xl border border-slate-200 px-4 py-3 text-base text-black shadow-sm focus:border-[var(--brand)] focus:outline-none"
           >
             <option value="website">Website</option>
             <option value="whatsapp">WhatsApp</option>
@@ -171,7 +171,7 @@ export default function StepContact({ data, updateData, onSubmit, onBack, isSubm
             type="text"
             value={data.utmCampaign}
             onChange={(event) => updateData({ utmCampaign: event.target.value })}
-            className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+            className="rounded-xl border border-slate-200 px-4 py-3 text-base text-black shadow-sm focus:border-[var(--brand)] focus:outline-none"
             placeholder="Optional tracking code"
           />
         </label>
@@ -181,7 +181,7 @@ export default function StepContact({ data, updateData, onSubmit, onBack, isSubm
             type="date"
             value={data.dob}
             onChange={(event) => updateData({ dob: event.target.value })}
-            className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+            className="rounded-xl border border-slate-200 px-4 py-3 text-base text-slate-900 shadow-sm focus:border-teal-500 focus:outline-none"
             max={new Date().toISOString().split('T')[0]}
           />
         </label>
@@ -189,13 +189,13 @@ export default function StepContact({ data, updateData, onSubmit, onBack, isSubm
 
       <section>
         <label className={`flex items-start gap-3 rounded-2xl border px-4 py-4 transition-all ${
-          consent ? 'border-teal-500 bg-teal-50 shadow-sm' : 'border-slate-200 hover:border-teal-300'
+          consent ? 'border-[var(--brand)] bg-[var(--brand)]/10 shadow-sm' : 'border-slate-200 hover:border-[var(--brand)]'
         }`}>
           <input
             type="checkbox"
             checked={consent}
             onChange={(event) => setConsent(event.target.checked)}
-            className="mt-1 h-5 w-5 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
+            className="mt-1 h-5 w-5 rounded border-slate-300 text-[var(--brand)] focus:ring-[var(--brand)]"
             required
           />
           <div className="space-y-1 text-sm leading-relaxed text-slate-700">
@@ -206,12 +206,12 @@ export default function StepContact({ data, updateData, onSubmit, onBack, isSubm
         </label>
       </section>
 
-      <aside className="rounded-2xl border border-teal-100 bg-teal-50/70 p-5 text-sm text-teal-700">
-        <p className="text-sm font-semibold text-teal-800">Timeline immediately after submission</p>
+      <aside className="rounded-2xl border border-[var(--brand)]/20 bg-[var(--brand)]/6 p-5 text-sm text-[var(--brand)]">
+        <p className="text-sm font-semibold text-[var(--brand)]">Timeline immediately after submission</p>
         <ol className="mt-3 space-y-3 text-sm leading-relaxed">
-          <li><span className="font-semibold text-teal-600">•</span> Instant email with shortlisted programs and fit notes.</li>
-          <li><span className="font-semibold text-teal-600">•</span> Counsellor call within 24 hours (or your chosen channel).</li>
-          <li><span className="font-semibold text-teal-600">•</span> Financing + scholarship options tailored to your profile.</li>
+          <li><span className="font-semibold text-[var(--brand)]">•</span> Instant email with shortlisted programs and fit notes.</li>
+          <li><span className="font-semibold text-[var(--brand)]">•</span> Counsellor call within 24 hours (or your chosen channel).</li>
+          <li><span className="font-semibold text-[var(--brand)]">•</span> Financing + scholarship options tailored to your profile.</li>
         </ol>
       </aside>
 
@@ -220,14 +220,14 @@ export default function StepContact({ data, updateData, onSubmit, onBack, isSubm
           type="button"
           onClick={onBack}
           disabled={isSubmitting}
-          className="w-full rounded-full border border-slate-300 px-6 py-4 text-sm font-semibold text-slate-700 transition-all hover:border-teal-400 hover:text-teal-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          className="w-full rounded-full border border-slate-300 px-6 py-4 text-sm font-semibold text-slate-700 transition-all hover:border-[var(--brand)] hover:text-[var(--brand)] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           Back
         </button>
         <button
           type="submit"
           disabled={disableSubmit}
-          className="w-full rounded-full bg-slate-900 px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          className="w-full rounded-full bg-[var(--brand)] px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           {isSubmitting ? 'Submitting…' : 'Complete & Get Matches'}
         </button>

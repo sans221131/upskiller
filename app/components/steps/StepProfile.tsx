@@ -99,8 +99,8 @@ export default function StepProfile({
                 onClick={() => updateData({ employmentStatus: status.value })}
                 className={`rounded-2xl border px-5 py-4 text-left transition-all ${
                   isActive
-                    ? "border-teal-500 bg-teal-50 shadow-sm"
-                    : "border-slate-200 hover:border-teal-300 hover:bg-teal-50/40"
+                    ? "border-[var(--brand)] bg-[var(--brand)]/10 shadow-sm"
+                    : "border-slate-200 hover:border-[var(--brand)] hover:bg-[var(--brand)]/6"
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -139,7 +139,7 @@ export default function StepProfile({
                 onChange={(event) =>
                   updateData({ experienceYears: event.target.value })
                 }
-                className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+                className="rounded-xl border border-slate-200 px-4 py-3 text-base text-black shadow-sm focus:border-[var(--brand)] focus:outline-none"
                 placeholder="e.g. 3.5"
                 required
               />
@@ -155,7 +155,7 @@ export default function StepProfile({
                   onChange={(event) =>
                     updateData({ salaryBand: event.target.value })
                   }
-                  className="rounded-xl border border-slate-200 px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+                  className="rounded-xl border border-slate-200 px-4 py-3 text-base text-black shadow-sm focus:border-[var(--brand)] focus:outline-none"
                 >
                   <option value="">Choose a range…</option>
                   {SALARY_BANDS.map((band) => (
@@ -189,8 +189,8 @@ export default function StepProfile({
                 onClick={() => updateData({ gender })}
                 className={`rounded-full px-5 py-2 text-sm font-semibold transition-all ${
                   isActive
-                    ? "bg-teal-100 text-teal-700"
-                    : "border border-slate-200 text-slate-600 hover:border-teal-300 hover:text-teal-700"
+                    ? "bg-[var(--brand)]/10 text-[var(--brand)]"
+                    : "border border-slate-200 text-slate-600 hover:border-[var(--brand)] hover:text-[var(--brand)]"
                 }`}
               >
                 {gender}
@@ -217,8 +217,8 @@ export default function StepProfile({
                 onClick={() => updateData({ goal: goal.value })}
                 className={`rounded-2xl border px-4 py-5 text-center transition-all ${
                   isActive
-                    ? "border-teal-500 bg-teal-50 shadow-sm"
-                    : "border-slate-200 hover:border-teal-300 hover:bg-teal-50/40"
+                    ? "border-[var(--brand)] bg-[var(--brand)]/10 shadow-sm"
+                    : "border-slate-200 hover:border-[var(--brand)] hover:bg-[var(--brand)]/6"
                 }`}
               >
                 <span className="mb-3 block text-3xl leading-none">
@@ -233,11 +233,11 @@ export default function StepProfile({
         </div>
       </section>
 
-      <aside className="rounded-2xl border border-teal-100 bg-teal-50/70 p-5">
-        <p className="text-sm font-semibold text-teal-800">
+      <aside className="rounded-2xl border border-[var(--brand)]/20 bg-[var(--brand)]/6 p-5">
+        <p className="text-sm font-semibold text-[var(--brand)]">
           What you unlock next
         </p>
-        <p className="mt-1 text-sm leading-relaxed text-teal-700">
+        <p className="mt-1 text-sm leading-relaxed text-[var(--brand)]">
           An alumni mentor from your background connects within 24 hours,
           followed by tailored program matches and financing guidance curated
           for your situation.
@@ -252,7 +252,7 @@ export default function StepProfile({
               !data.goal ||
               (requireExperience && !data.experienceYears)
           )}
-          className="w-full rounded-full bg-slate-900 px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          className="w-full rounded-full bg-[var(--brand)] px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           Continue to Preferences
         </button>

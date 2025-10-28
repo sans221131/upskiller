@@ -87,7 +87,61 @@ function formatDeliveryMode(mode: string | null) {
   }
 }
 
+// Map common institution slugs/names to actual filenames in public/uni and public/logos
+const IMAGE_MAP: Record<string, { uni?: string; logo?: string }> = {
+  // uni folder
+  amityuniversityonline: { uni: '/uni/amity.webp', logo: '/logos/amity.jpeg' },
+  amity: { uni: '/uni/amity.webp', logo: '/logos/amity.jpeg' },
+  nmims: { uni: '/uni/nmims.jpg', logo: '/logos/nmims.png' },
+  manipal: { uni: '/uni/manipal.jpg', logo: '/logos/manipal.svg' },
+  jain: { uni: '/uni/jain.jpg', logo: '/logos/jain.png' },
+  chandigarh: { uni: '/uni/chandigarh.webp', logo: '/logos/chandighar.jpeg' },
+  lpu: { uni: '/uni/lpu.webp', logo: '/logos/LPU.svg' },
+  // common variants
+  sikkimmanipaluniversity: { uni: '/uni/manipal.jpg', logo: '/logos/manipal.svg' },
+  sikkimmanipal: { uni: '/uni/manipal.jpg', logo: '/logos/manipal.svg' },
+};
+
+const SVG_PLACEHOLDER = `data:image/svg+xml;utf8,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480"><rect width="100%" height="100%" fill="#f8fafc"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9ca3af" font-family="Arial, Helvetica, sans-serif" font-size="20">Image not available</text></svg>'
+)} `;
+
 export default function ProgramCatalog({ programs }: { programs: ProgramSummary[] }) {
+  // Known filename mapping for public images/logos. Filenames in /public vary in
+  // casing and extensions, so map common institution slugs/names to the exact
+  // files we have in /public/uni and /public/logos.
+  const UNI_IMAGE_MAP: Record<string, { image?: string; logo?: string }> = {
+    nmims: { image: '/uni/nmims.jpg', logo: '/logos/nmims.png' },
+    manipal: { image: '/uni/manipal.jpg', logo: '/logos/manipal.svg' },
+    jain: { image: '/uni/jain.jpg', logo: '/logos/jain.png' },
+    lpu: { image: '/uni/lpu.webp', logo: '/logos/LPU.svg' },
+    amity: { image: '/uni/amity.webp', logo: '/logos/amity.jpeg' },
+    chandigarh: { image: '/uni/chandigarh.webp', logo: '/logos/chandighar.jpeg' },
+  };
+
+  function findAssets(institutionName?: string | null, institutionSlug?: string | null) {
+    const candidates: string[] = [];
+    if (institutionSlug) candidates.push(institutionSlug.toLowerCase());
+    if (institutionName) candidates.push(institutionName.toLowerCase().replace(/\s+/g, ''));
+    if (institutionName) candidates.push(institutionName.toLowerCase());
+
+    for (const c of candidates) {
+      // try direct key then a shorter token (e.g. 'jain university' -> 'jain')
+      if (UNI_IMAGE_MAP[c]) return UNI_IMAGE_MAP[c];
+      if (IMAGE_MAP[c]) {
+        const m = IMAGE_MAP[c];
+        return { image: m.uni, logo: m.logo };
+      }
+      const token = c.split(/[^a-z0-9]/i)[0];
+      if (UNI_IMAGE_MAP[token]) return UNI_IMAGE_MAP[token];
+      if (IMAGE_MAP[token]) {
+        const m = IMAGE_MAP[token];
+        return { image: m.uni, logo: m.logo };
+      }
+    }
+
+    return {};
+  }
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
 
   const options = useMemo(() => {
@@ -161,7 +215,7 @@ export default function ProgramCatalog({ programs }: { programs: ProgramSummary[
               value={filters.query}
               onChange={(event) => setFilters((prev) => ({ ...prev, query: event.target.value }))}
               placeholder="e.g. Business Analytics, NMIMS"
-              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-teal-500 focus:outline-none"
+              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 focus:border-[var(--brand)] focus:outline-none"
             />
           </div>
 
@@ -170,7 +224,7 @@ export default function ProgramCatalog({ programs }: { programs: ProgramSummary[
             <select
               value={filters.degreeType}
               onChange={(event) => setFilters((prev) => ({ ...prev, degreeType: event.target.value }))}
-              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-teal-500 focus:outline-none"
+              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 focus:border-[var(--brand)] focus:outline-none"
             >
               <option value="all">All</option>
               {options.degreeTypes.map((degree) => (
@@ -186,7 +240,7 @@ export default function ProgramCatalog({ programs }: { programs: ProgramSummary[
             <select
               value={filters.deliveryMode}
               onChange={(event) => setFilters((prev) => ({ ...prev, deliveryMode: event.target.value }))}
-              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm capitalize focus:border-teal-500 focus:outline-none"
+              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 capitalize focus:border-[var(--brand)] focus:outline-none"
             >
               <option value="all">All</option>
               {options.deliveryModes.map((mode) => (
@@ -202,7 +256,7 @@ export default function ProgramCatalog({ programs }: { programs: ProgramSummary[
             <select
               value={filters.emi}
               onChange={(event) => setFilters((prev) => ({ ...prev, emi: event.target.value }))}
-              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-teal-500 focus:outline-none"
+              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 focus:border-[var(--brand)] focus:outline-none"
             >
               <option value="all">All</option>
               <option value="yes">EMI available</option>
@@ -214,7 +268,7 @@ export default function ProgramCatalog({ programs }: { programs: ProgramSummary[
             <button
               type="button"
               onClick={resetFilters}
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:border-teal-400 hover:text-teal-600"
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:border-[var(--brand)] hover:text-[var(--brand)]"
             >
               Reset filters
             </button>
@@ -228,7 +282,7 @@ export default function ProgramCatalog({ programs }: { programs: ProgramSummary[
           <p className="text-slate-600 mb-6">
             Try adjusting your filters or tell us about your goals for tailored suggestions.
           </p>
-          <a href="/lead-form" className="inline-block bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-full font-semibold">
+          <a href="/lead-form" className="inline-block bg-[var(--brand)] hover:opacity-90 text-white px-6 py-3 rounded-full font-semibold">
             Get personalised guidance
           </a>
         </div>
@@ -238,87 +292,108 @@ export default function ProgramCatalog({ programs }: { programs: ProgramSummary[
             const durationLabel = formatDuration(program.durationMonths);
             const modeLabel = formatDeliveryMode(program.deliveryMode);
             const highlightPoints = getHighlightPoints(program.highlights, program.outcomes);
+            const assets = findAssets(program.institutionName, program.institutionSlug);
 
             return (
               <article
-                key={program.id}
-                className="flex h-full flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-teal-300 hover:shadow-lg"
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center gap-2 rounded-full bg-[hsl(173,70%,95%)] px-3 py-1 text-[0.7rem] font-semibold tracking-[0.16em] text-[hsl(172,60%,32%)]">
-                      {program.degreeType}
-                    </span>
-                    {program.emiAvailable ? (
-                      <span className="rounded-full bg-[hsl(150,80%,94%)] px-3 py-1 text-[0.65rem] font-semibold tracking-[0.14em] text-[hsl(151,60%,32%)]">
-                        EMI OPTIONS
-                      </span>
-                    ) : null}
-                  </div>
-
-                  <div className="mt-5 space-y-2">
-                    <h2 className="text-[1.625rem] font-semibold leading-tight tracking-tight text-slate-900">
-                      {program.title}
-                    </h2>
-                    <p className="text-[0.65rem] uppercase tracking-[0.28em] text-slate-400">
-                      {program.institutionName ?? 'Partner Institution'}
-                      {program.institutionLocation ? ` • ${program.institutionLocation}` : ''}
-                    </p>
-                  </div>
-
-                  <div className="mt-6 space-y-3 text-[0.9rem]">
-                    {durationLabel ? (
-                      <div className="flex items-start justify-between gap-3">
-                        <span className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-slate-400">
-                          Duration
-                        </span>
-                        <span className="text-sm font-medium text-slate-900">{durationLabel}</span>
-                      </div>
-                    ) : null}
-                    {modeLabel ? (
-                      <div className="flex items-start justify-between gap-3">
-                        <span className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-slate-400">
-                          Learning Model
-                        </span>
-                        <span className="text-sm font-medium text-slate-900">{modeLabel}</span>
-                      </div>
-                    ) : null}
-                    {typeof program.totalFee === 'number' ? (
-                      <div className="flex items-start justify-between gap-3">
-                        <span className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-slate-400">
-                          Total Investment
-                        </span>
-                        <span className="text-sm font-semibold text-slate-900">₹{program.totalFee.toLocaleString('en-IN')}</span>
-                      </div>
-                    ) : null}
-                  </div>
-
-                  {highlightPoints.length > 0 && (
-                    <ul className="mt-6 space-y-2 rounded-2xl bg-slate-50/90 p-4 text-sm leading-relaxed text-slate-600">
-                      {highlightPoints.map((point, index) => (
-                        <li key={index} className="flex gap-3">
-                          <span className="mt-1 inline-block h-2 w-2 flex-shrink-0 rounded-full bg-teal-500" />
-                          <span>{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-
-                <div className="mt-8 space-y-4 border-t border-slate-200 pt-6">
-                  {program.institutionAccreditation && (
-                    <div className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-slate-400">
-                      {program.institutionAccreditation}
-                    </div>
-                  )}
-                  <a
-                    href="/lead-form"
-                    className="block w-full rounded-full bg-teal-600 px-6 py-3 text-center text-sm font-semibold text-white shadow-sm transition-all hover:bg-teal-700 hover:shadow-lg"
+                    key={program.id}
+                    className="group flex h-full flex-col justify-between rounded-3xl border border-slate-100 bg-white p-6 md:p-8 shadow-sm overflow-hidden transition-all hover:shadow-lg"
                   >
-                    Apply Now
-                  </a>
-                </div>
-              </article>
+                  <div>
+                    {/* derive image/logo paths from slug/name when available */}
+                    {assets.image ? (
+                      <div className="mb-6 rounded-lg overflow-hidden shadow-sm">
+                        <img
+                          src={assets.image}
+                          onError={(e) => {
+                            const t = e.currentTarget as HTMLImageElement;
+                            t.src = SVG_PLACEHOLDER;
+                          }}
+                          alt={`${program.institutionName} campus`}
+                          className="w-full h-44 object-cover"
+                        />
+                      </div>
+                    ) : null}
+
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border">
+                          <img
+                            src={assets.logo || `/logos/${(program.institutionName||'').toLowerCase().replace(/\s+/g,'')}.png`}
+                            alt={`${program.institutionName} logo`}
+                            className="w-8 h-8 object-contain"
+                            onError={(e) => {
+                              const t = e.currentTarget as HTMLImageElement;
+                              const base = `/logos/${(program.institutionName||'').toLowerCase().replace(/\s+/g,'')}`;
+                              if (!t.dataset.try) {
+                                t.dataset.try = 'jpeg';
+                                t.src = `${base}.jpeg`;
+                                return;
+                              }
+                              if (t.dataset.try === 'jpeg') {
+                                t.dataset.try = 'svg';
+                                t.src = `${base}.svg`;
+                                return;
+                              }
+                              t.src = SVG_PLACEHOLDER;
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-bold text-slate-900">{program.institutionName ?? 'Partner Institution'}</h3>
+                          {program.institutionAccreditation && (
+                            <div className="mt-1 text-[0.65rem] font-semibold text-slate-500">
+                              {program.institutionAccreditation}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {program.emiAvailable ? (
+                        <span className="rounded-full bg-slate-50 px-3 py-1 text-[0.65rem] font-semibold tracking-[0.14em] text-[var(--brand)]">
+                          EMI OPTIONS
+                        </span>
+                      ) : null}
+                    </div>
+
+                    <div className="mb-3">
+                      <h2 className="text-2xl font-bold text-slate-900">{program.title}</h2>
+                      <p className="text-sm text-slate-600 mt-1">{program.institutionLocation ?? ''}</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-slate-50 rounded-xl">
+                      <div>
+                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Mode</div>
+                        <div className="text-sm font-bold text-slate-900">{formatDeliveryMode(program.deliveryMode) ?? '-'}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Duration</div>
+                        <div className="text-sm font-bold text-slate-900">{formatDuration(program.durationMonths) ?? '-'}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">EMI from</div>
+                        <div className="text-sm font-bold text-green-600">{typeof program.totalFee === 'number' ? `₹${Math.round((program.totalFee / 24)).toLocaleString('en-IN')}/mo` : '-'}</div>
+                      </div>
+                      <div></div>
+                    </div>
+
+                    {highlightPoints.length > 0 && (
+                      <ul className="space-y-2 mb-6">
+                        {highlightPoints.map((point, index) => (
+                          <li key={index} className="flex items-start gap-2 text-sm text-slate-600">
+                            <span className="inline-block w-1.5 h-1.5 bg-[var(--brand)] rounded-full mt-1.5 flex-shrink-0"></span>
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-4 pt-6 border-t border-slate-200 opacity-0 -translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200">
+                    <a href="/lead-form" className="inline-block bg-[var(--brand)] text-white px-6 py-3 rounded-full font-semibold">Apply Now</a>
+                    <a href={`/programs/${program.id}#curriculum`} className="text-sm font-semibold text-[var(--brand)] hover:underline">Curriculum</a>
+                  </div>
+                </article>
             );
           })}
         </div>
