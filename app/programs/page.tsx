@@ -30,12 +30,29 @@ async function getPrograms(): Promise<ProgramSummary[]> {
       institutionSlug: institutions.slug,
       institutionLocation: institutions.location,
       institutionAccreditation: institutions.accreditation,
+      institutionShortDescription: institutions.shortDescription,
     })
     .from(programsTable)
     .leftJoin(institutions, eq(programsTable.institutionId, institutions.id))
     .orderBy(desc(programsTable.createdAt));
 
-  return programList;
+  // Post-process accreditation to only include NAAC and any UGC-entitled mention
+  const cleaned = (programList as any[]).map((r) => {
+    const acc = (r.institutionAccreditation || '') + ' ' + (r.institutionShortDescription || '');
+
+    // capture NAAC token like 'NAAC A+' or 'NAAC - A+' up to punctuation
+    const naacMatch = acc.match(/(NAAC[^,;:\)\(\.]*)/i);
+    const naac = naacMatch ? naacMatch[1].trim() : null;
+
+
+
+      return {
+        ...r,
+        institutionAccreditation: naac || null,
+      };
+  });
+
+  return cleaned as ProgramSummary[];
 }
 
 export const revalidate = 300;
@@ -43,8 +60,9 @@ export const revalidate = 300;
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
 
-export default async function ProgramsPage() {
+export default async function ProgramsPage({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
   const programs = await getPrograms();
+  const initialQuery = typeof searchParams?.university === 'string' ? searchParams.university : '';
 
   return (
     <div className="min-h-screen bg-white">
@@ -92,7 +110,7 @@ export default async function ProgramsPage() {
               Use filters below to narrow down your options
             </p>
           </div>
-          <ProgramCatalog programs={programs} />
+          <ProgramCatalog programs={programs} initialQuery={initialQuery} />
         </div>
       </section>
 

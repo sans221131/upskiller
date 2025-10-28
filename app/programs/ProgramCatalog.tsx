@@ -33,34 +33,7 @@ const DEFAULT_FILTERS: Filters = {
   emi: 'all',
 };
 
-function removeNoise(text: string) {
-  return text.replace(/UGC-entitled Online Degrees?\.*/gi, '').trim();
-}
-
-function getHighlightPoints(highlights: string | null, outcomes: string | null) {
-  const source = [highlights, outcomes]
-    .filter(Boolean)
-    .map((entry) => removeNoise(entry as string))
-    .join('\n');
-
-  if (!source) return [];
-
-  const segments = source
-    .split(/\n|•|\u2022|\u2023|\*|\.-\s|(?<=\.)\s+/g)
-    .map((segment) => segment.trim())
-    .filter((segment) => segment.length > 0)
-    .map((segment) => segment.replace(/^[-–•\d.\s]+/, '').trim())
-    .filter((segment) => segment.length >= 12)
-    .map((segment) => (segment.length > 140 ? `${segment.slice(0, 137).trimEnd()}…` : segment));
-
-  const unique: string[] = [];
-  segments.forEach((segment) => {
-    if (unique.some((entry) => entry.toLowerCase() === segment.toLowerCase())) return;
-    unique.push(segment);
-  });
-
-  return unique.slice(0, 3);
-}
+// highlights/outcomes parsing removed — cards no longer fetch or render the bullet list
 
 function formatDuration(months: number | null) {
   if (!months) return null;
@@ -69,6 +42,15 @@ function formatDuration(months: number | null) {
     return `${months} months • ${years} ${years === 1 ? 'year' : 'years'}`;
   }
   return `${months} months • ${years.toFixed(1)} years`;
+}
+
+function formatDurationShort(months: number | null) {
+  if (!months) return null;
+  const years = months / 12;
+  if (Number.isInteger(years)) {
+    return `${months} mo • ${years}y`;
+  }
+  return `${months} mo • ${years.toFixed(1)}y`;
 }
 
 function formatDeliveryMode(mode: string | null) {
@@ -84,6 +66,31 @@ function formatDeliveryMode(mode: string | null) {
       return 'On Campus';
     default:
       return mode;
+  }
+}
+
+function formatDeliveryModeShort(mode: string | null) {
+  if (!mode) return null;
+  switch (mode) {
+    case 'online':
+      return 'Online';
+    case 'blended':
+      return 'Blended';
+    case 'weekend':
+      return 'Weekend';
+    case 'on-campus':
+      return 'On-campus';
+    default:
+      return mode;
+  }
+}
+
+function formatFee(fee: number | null) {
+  if (fee == null) return null;
+  try {
+    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(fee);
+  } catch (e) {
+    return `₹${fee}`;
   }
 }
 
@@ -106,7 +113,7 @@ const SVG_PLACEHOLDER = `data:image/svg+xml;utf8,${encodeURIComponent(
   '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480"><rect width="100%" height="100%" fill="#f8fafc"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9ca3af" font-family="Arial, Helvetica, sans-serif" font-size="20">Image not available</text></svg>'
 )} `;
 
-export default function ProgramCatalog({ programs }: { programs: ProgramSummary[] }) {
+export default function ProgramCatalog({ programs, initialQuery = '' }: { programs: ProgramSummary[]; initialQuery?: string }) {
   // Known filename mapping for public images/logos. Filenames in /public vary in
   // casing and extensions, so map common institution slugs/names to the exact
   // files we have in /public/uni and /public/logos.
@@ -142,7 +149,7 @@ export default function ProgramCatalog({ programs }: { programs: ProgramSummary[
 
     return {};
   }
-  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
+  const [filters, setFilters] = useState<Filters>({ ...DEFAULT_FILTERS, query: initialQuery });
 
   const options = useMemo(() => {
     const degrees = new Set<string>();
@@ -203,7 +210,7 @@ export default function ProgramCatalog({ programs }: { programs: ProgramSummary[
 
   return (
     <div className="space-y-8">
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+  <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
         <div className="grid gap-4 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <label htmlFor="program-search" className="text-sm font-semibold text-slate-700">
@@ -286,23 +293,26 @@ export default function ProgramCatalog({ programs }: { programs: ProgramSummary[
             Get personalised guidance
           </a>
         </div>
-      ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    ) : (
+  <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredPrograms.map((program) => {
             const durationLabel = formatDuration(program.durationMonths);
             const modeLabel = formatDeliveryMode(program.deliveryMode);
-            const highlightPoints = getHighlightPoints(program.highlights, program.outcomes);
+            // highlights removed — no longer computing highlightPoints
+            const highlightPoints: string[] = [];
             const assets = findAssets(program.institutionName, program.institutionSlug);
 
             return (
               <article
-                    key={program.id}
-                    className="group flex h-full flex-col justify-between rounded-3xl border border-slate-100 bg-white p-6 md:p-8 shadow-sm overflow-hidden transition-all hover:shadow-lg"
-                  >
-                  <div>
+                key={program.id}
+                className="group relative flex h-full flex-col justify-between rounded-3xl border border-slate-100 bg-white p-3 md:p-8 shadow-sm overflow-hidden transition-all hover:shadow-lg min-h-[14rem]"
+              >
+                {/* top content: no permanent bottom whitespace; add padding only on hover so the action row can slide in */}
+                <div className="flex flex-col justify-between pb-0 group-hover:pb-16 transition-all duration-200">
+                  <div className="flex-1">
                     {/* derive image/logo paths from slug/name when available */}
                     {assets.image ? (
-                      <div className="mb-6 rounded-lg overflow-hidden shadow-sm">
+                      <div className="mb-4 rounded-lg overflow-hidden shadow-sm">
                         <img
                           src={assets.image}
                           onError={(e) => {
@@ -310,21 +320,21 @@ export default function ProgramCatalog({ programs }: { programs: ProgramSummary[
                             t.src = SVG_PLACEHOLDER;
                           }}
                           alt={`${program.institutionName} campus`}
-                          className="w-full h-44 object-cover"
+                          className="w-full h-28 md:h-44 object-cover"
                         />
                       </div>
                     ) : null}
 
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-lg flex items-center justify-center border">
                           <img
-                            src={assets.logo || `/logos/${(program.institutionName||'').toLowerCase().replace(/\s+/g,'')}.png`}
+                            src={assets.logo || `/logos/${(program.institutionName || '').toLowerCase().replace(/\s+/g, '')}.png`}
                             alt={`${program.institutionName} logo`}
-                            className="w-8 h-8 object-contain"
+                            className="w-6 h-6 md:w-8 md:h-8 object-contain"
                             onError={(e) => {
                               const t = e.currentTarget as HTMLImageElement;
-                              const base = `/logos/${(program.institutionName||'').toLowerCase().replace(/\s+/g,'')}`;
+                              const base = `/logos/${(program.institutionName || '').toLowerCase().replace(/\s+/g, '')}`;
                               if (!t.dataset.try) {
                                 t.dataset.try = 'jpeg';
                                 t.src = `${base}.jpeg`;
@@ -339,11 +349,20 @@ export default function ProgramCatalog({ programs }: { programs: ProgramSummary[
                             }}
                           />
                         </div>
-                        <div>
-                          <h3 className="text-sm font-bold text-slate-900">{program.institutionName ?? 'Partner Institution'}</h3>
+                        <div className="flex-1">
+                          <h3 className="text-xs md:text-sm font-bold text-slate-900">{program.institutionName ?? 'Partner Institution'}</h3>
                           {program.institutionAccreditation && (
-                            <div className="mt-1 text-[0.65rem] font-semibold text-slate-500">
-                              {program.institutionAccreditation}
+                            <div className="mt-1 flex flex-wrap gap-2">
+                              {program.institutionAccreditation
+                                .split(/[,;•\u2022\|]+/) // split on common separators
+                                .map((s) => s.trim())
+                                .filter(Boolean)
+                                .slice(0, 6)
+                                .map((badge, idx) => (
+                                  <span key={idx} className="inline-block bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded-full">
+                                    {badge}
+                                  </span>
+                                ))}
                             </div>
                           )}
                         </div>
@@ -356,44 +375,43 @@ export default function ProgramCatalog({ programs }: { programs: ProgramSummary[
                       ) : null}
                     </div>
 
-                    <div className="mb-3">
-                      <h2 className="text-2xl font-bold text-slate-900">{program.title}</h2>
-                      <p className="text-sm text-slate-600 mt-1">{program.institutionLocation ?? ''}</p>
+                    <div className="mb-2 min-h-[40px]">
+                      <h2 className="text-base md:text-2xl font-bold text-slate-900 line-clamp-3">{program.title}</h2>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-slate-50 rounded-xl">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3 p-2 bg-slate-50 rounded-xl">
                       <div>
                         <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Mode</div>
-                        <div className="text-sm font-bold text-slate-900">{formatDeliveryMode(program.deliveryMode) ?? '-'}</div>
+                        <div className="text-xs md:text-sm font-bold text-slate-900">{formatDeliveryModeShort(program.deliveryMode) ?? '-'}</div>
                       </div>
                       <div>
                         <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Duration</div>
-                        <div className="text-sm font-bold text-slate-900">{formatDuration(program.durationMonths) ?? '-'}</div>
+                        <div className="text-xs md:text-sm font-bold text-slate-900">{formatDurationShort(program.durationMonths) ?? '-'}</div>
                       </div>
                       <div>
-                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">EMI from</div>
-                        <div className="text-sm font-bold text-green-600">{typeof program.totalFee === 'number' ? `₹${Math.round((program.totalFee / 24)).toLocaleString('en-IN')}/mo` : '-'}</div>
+                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Fees</div>
+                        <div className="text-xs md:text-sm font-bold text-slate-900">{formatFee(program.totalFee) ?? 'TBD'}</div>
                       </div>
-                      <div></div>
                     </div>
 
-                    {highlightPoints.length > 0 && (
-                      <ul className="space-y-2 mb-6">
-                        {highlightPoints.map((point, index) => (
-                          <li key={index} className="flex items-start gap-2 text-sm text-slate-600">
-                            <span className="inline-block w-1.5 h-1.5 bg-[var(--brand)] rounded-full mt-1.5 flex-shrink-0"></span>
-                            <span>{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                    {/* highlights removed as per design: no bullet list shown */}
                   </div>
 
-                  <div className="flex items-center gap-4 pt-6 border-t border-slate-200 opacity-0 -translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200">
-                    <a href="/lead-form" className="inline-block bg-[var(--brand)] text-white px-6 py-3 rounded-full font-semibold">Apply Now</a>
+                  {/* Visible View button for mobile (desktop keeps hover action bar) */}
+                  <div className="mt-3 md:hidden">
+                    <a href={`/programs/${program.id}`} className="inline-block w-full text-center bg-[var(--brand)] text-white px-3 py-2 rounded-full font-semibold">View</a>
+                  </div>
+                </div>
+
+                {/* absolute action bar slides up on hover; content gains bottom padding via group-hover to avoid overlap */}
+                <div className="absolute left-4 right-4 bottom-4 md:left-6 md:right-6 md:bottom-6 z-20 opacity-0 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200">
+                  <div className="flex items-center gap-3 pt-3 border-t border-slate-200 bg-white/90 backdrop-blur-sm rounded-b-2xl px-3 py-2">
+                    <a href={`/programs/${program.id}`} className="inline-block bg-[var(--brand)] text-white px-4 py-2 rounded-full font-semibold text-sm">View</a>
+                    <a href="/lead-form" className="inline-block bg-white text-[var(--brand)] border border-[var(--brand)] px-3 py-2 rounded-full font-semibold text-sm">Apply Now</a>
                     <a href={`/programs/${program.id}#curriculum`} className="text-sm font-semibold text-[var(--brand)] hover:underline">Curriculum</a>
                   </div>
-                </article>
+                </div>
+              </article>
             );
           })}
         </div>

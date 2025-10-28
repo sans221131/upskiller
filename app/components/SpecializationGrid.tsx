@@ -88,7 +88,8 @@ export default function SpecializationGrid() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  {/* Mobile: show two columns for a denser grid; md+ keeps existing layout */}
+  <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {specializations.map((spec, index) => (
             <a
               key={index}

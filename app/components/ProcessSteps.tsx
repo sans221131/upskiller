@@ -59,89 +59,16 @@ export default function ProcessSteps() {
       />
 
       <div className="mx-auto max-w-7xl">
-        {/* Success pill */}
-        <div className="mb-16 flex justify-center">
-          <span className="inline-flex items-center gap-3 rounded-full border border-green-200 bg-green-50 px-6 py-3 text-sm font-semibold text-green-700 shadow-lg">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
-            Admissions made simple. No chaos, just clarity.
-          </span>
-        </div>
+        {/* Success pill removed per request */}
 
-        {/* Title */}
-        <div className="mb-24 text-center">
-          <h2 id="process-heading" className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl md:text-6xl lg:text-7xl">
-            How We Get You <span style={{ color: primary }}>Admitted</span>
-          </h2>
-          <p className="mx-auto mt-8 max-w-4xl text-xl leading-relaxed text-slate-600 sm:text-lg">
-            A clean 4-step journey from profile to offer letter—designed to reduce friction and increase admits.
-          </p>
-        </div>
+        {/* Title and subtitle removed per request */}
 
-        {/* Enhanced Stats */}
-        <div className="mb-24 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((s, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: reduce ? 1 : 0, y: reduce ? 0 : 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.6 }}
-              transition={{ delay: i * 0.1, duration: 0.6 }}
-            >
-              <Card className="text-center py-10 group hover:shadow-2xl relative overflow-hidden">
-                {/* Background glow effect */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="absolute inset-0 bg-gradient-to-br opacity-5" 
-                    style={{ background: `linear-gradient(135deg, ${primary}, ${primaryDark})` }} />
-                </div>
-                
-                <div className="relative z-10">
-                  <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl shadow-xl ring-1 ring-white/50 transition-all duration-300 group-hover:scale-110"
-                    style={{ background: `linear-gradient(135deg, ${primary}10, ${primaryDark}05)` }}>
-                    <s.icon className="h-9 w-9 transition-all duration-300 group-hover:scale-110" 
-                      style={{ color: primary }} aria-hidden />
-                  </div>
-                  
-                  <motion.div 
-                    className="text-6xl font-extrabold mb-3 bg-gradient-to-br bg-clip-text text-transparent"
-                    style={{ backgroundImage: `linear-gradient(135deg, ${primary}, ${primaryDark})` }}
-                    initial={{ scale: reduce ? 1 : 0.8 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 + 0.3, type: "spring", stiffness: 200 }}
-                  >
-                    {s.value}
-                  </motion.div>
-                  
-                  <div className="text-lg font-bold text-slate-900 mb-4">{s.label}</div>
-                  <p className="text-sm text-slate-600 leading-relaxed px-2">{s.description}</p>
-                </div>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+        {/* Stats section commented out */}
 
-        {/* Reasons */}
-        <div className="mb-24 grid gap-8 lg:grid-cols-2">
-          {reasons.map((r, i) => (
-            <Card key={i} hover className="p-8">
-              <div className="flex items-start gap-6">
-                <div
-                  className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl text-white shadow-xl"
-                  style={{ background: `linear-gradient(135deg, ${primary}, ${primaryDark})` }}
-                >
-                  <r.icon className="h-8 w-8" aria-hidden />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-slate-900 mb-4">{r.title}</h3>
-                  <p className="text-slate-600 leading-relaxed text-base">{r.description}</p>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
+        {/* Reasons section commented out */}
 
-        {/* Timeline */}
-        <Card className="mb-20 p-8 md:p-12 lg:p-16 relative overflow-hidden">
+  {/* Timeline */}
+  <Card className="mb-8 p-8 md:p-12 lg:p-16 relative overflow-hidden">
           {/* Background decoration */}
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-8 left-8 w-32 h-32 rounded-full" style={{ background: `linear-gradient(135deg, ${primary}, ${primaryDark})` }} />
@@ -194,13 +121,11 @@ export default function ProcessSteps() {
                       {/* Step circle */}
                       <div className="group relative mb-6">
                         <div
-                          className="flex h-20 w-20 items-center justify-center rounded-full text-white text-xl font-bold shadow-2xl ring-4 ring-white transition-all duration-300 group-hover:scale-110"
-                          style={{ background: `linear-gradient(135deg, ${primary}, ${primaryDark})` }}
+                          className="flex h-20 w-20 items-center justify-center rounded-full text-white text-xl font-bold shadow transition-all duration-300 group-hover:scale-110"
+                          style={{ background: primary }}
                         >
                           <step.icon className="h-8 w-8" aria-hidden />
                         </div>
-                        <div className="absolute -inset-2 rounded-full opacity-30 blur-lg" 
-                          style={{ background: `linear-gradient(135deg, ${primary}, ${primaryDark})` }} />
                       </div>
                       
                       {/* Step info */}
@@ -231,13 +156,11 @@ export default function ProcessSteps() {
                     >
                       <div className="relative">
                         <div
-                          className="flex h-16 w-16 items-center justify-center rounded-full text-white text-lg font-bold shadow-xl transition-all duration-300 group-hover:scale-110"
-                          style={{ background: `linear-gradient(135deg, ${primary}, ${primaryDark})` }}
+                          className="flex h-16 w-16 items-center justify-center rounded-full text-white text-lg font-bold shadow transition-all duration-300 group-hover:scale-110"
+                          style={{ background: primary }}
                         >
                           <step.icon className="h-6 w-6" aria-hidden />
                         </div>
-                        <div className="absolute -inset-1 rounded-full opacity-30 blur-md" 
-                          style={{ background: `linear-gradient(135deg, ${primary}, ${primaryDark})` }} />
                       </div>
                       
                       <div className="flex-1">
@@ -273,7 +196,7 @@ export default function ProcessSteps() {
 
         {/* Enhanced CTA */}
         <motion.div 
-          className="relative text-center pt-12"
+          className="relative text-center pt-6"
           initial={{ opacity: reduce ? 1 : 0, y: reduce ? 0 : 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.6 }}
@@ -391,7 +314,7 @@ function ArrowConnector({ primary, primaryDark }: { primary: string; primaryDark
 
 function OfferLetter({ primary, primaryDark }: { primary: string; primaryDark: string }) {
   return (
-    <div className="mt-16 flex w-full justify-center items-center">
+    <div className="mt-8 flex w-full justify-center items-center">
       <div className="text-center flex flex-col items-center">
         <h4 className="text-2xl font-bold text-slate-900 mb-8">Your Success Story Starts Here</h4>
         
@@ -510,7 +433,7 @@ function OfferLetter({ primary, primaryDark }: { primary: string; primaryDark: s
         </div>
         
         <motion.p 
-          className="mt-8 text-lg text-slate-600 font-medium"
+          className="mt-4 text-lg text-slate-600 font-medium"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ delay: 1.5, duration: 0.8 }}

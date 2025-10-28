@@ -156,25 +156,26 @@ export default function Reviews() {
 
         {/* Filter removed — reviews show Upskillers counselling testimonials */}
 
-        {/* Reviews grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+  {/* Reviews grid: two columns on the smallest screens for a denser mobile layout */}
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {displayedReviews.map((review) => (
             <div
               key={review.id}
-              className="relative bg-gradient-to-b from-white to-[var(--brand)]/4 rounded-2xl p-8 border border-slate-100 hover:shadow-2xl transition-transform hover:-translate-y-1 overflow-visible flex flex-col"
+              className="relative bg-gradient-to-b from-white to-[var(--brand)]/4 rounded-2xl p-4 md:p-8 border border-slate-100 hover:shadow-2xl transition-transform hover:-translate-y-1 overflow-visible flex flex-col min-h-[14rem]"
             >
               {/* Left accent bar (stronger) */}
               <div className="absolute left-0 top-0 bottom-0 w-2 bg-[var(--brand)]/12 rounded-l-2xl"></div>
 
               {/* Avatar initial overlapping (visible) */}
-              <div className="absolute -top-6 left-6">
-                <div className="w-14 h-14 rounded-full bg-white border-2 border-[var(--brand)] flex items-center justify-center text-[var(--brand)] font-bold shadow">
+              <div className="absolute -top-4 left-4">
+                <div className="w-10 h-10 rounded-full bg-white border-2 border-[var(--brand)] flex items-center justify-center text-[var(--brand)] font-bold shadow text-sm">
                   {review.name ? review.name.charAt(0) : "U"}
                 </div>
               </div>
 
               {/* decorative opening quote (faded) */}
-              <div className="absolute top-4 right-4 text-[64px] text-[var(--brand)]/8 select-none">“</div>
+              {/* hide the oversized quote glyph on small screens to save vertical space */}
+              <div className="hidden md:block absolute top-4 right-4 text-[36px] text-[var(--brand)]/8 select-none">“</div>
 
               {/* Rating badge and university */}
               <div className="flex items-center gap-3 mb-3 pt-2">
@@ -186,18 +187,18 @@ export default function Reviews() {
               </div>
 
               {/* Review text */}
-              <p className="text-slate-700 mb-6 leading-relaxed italic text-[15px]">“{review.text}”</p>
+              <p className="text-slate-700 mb-4 leading-snug italic text-sm" style={{ display: '-webkit-box', WebkitLineClamp: 5, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>“{review.text}”</p>
 
               {/* User info */}
-              <div className="flex items-center justify-between pt-3 mt-auto border-t border-slate-100">
+              <div className="flex items-center justify-between pt-2 mt-auto border-t border-slate-100">
                 <div>
-                  <h4 className="font-semibold text-slate-900">{review.name}</h4>
-                  <p className="text-sm text-slate-600">{review.role}</p>
+                  <h4 className="font-semibold text-sm text-slate-900">{review.name}</h4>
+                  <p className="text-xs text-slate-600">{review.role}</p>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    <span className="text-xs font-semibold text-[var(--brand)] bg-[var(--brand)]/10 px-2 py-1 rounded-full">
+                    <span className="text-[10px] font-semibold text-[var(--brand)] bg-[var(--brand)]/10 px-2 py-1 rounded-full">
                       {review.program}
                     </span>
-                    <span className="text-xs font-semibold text-green-700 bg-green-50 px-2 py-1 rounded-full">
+                    <span className="text-[10px] font-semibold text-green-700 bg-green-50 px-2 py-1 rounded-full">
                       {review.university}
                     </span>
                   </div>

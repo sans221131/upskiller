@@ -94,34 +94,34 @@ export default async function BrochureResources() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {matched.map((brochure, index) => (
             <div
               key={brochure.filename ?? index}
-              className="group bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm hover:shadow-2xl transition-transform hover:-translate-y-1 flex flex-col h-full"
+              className="group bg-white rounded-2xl p-3 md:p-8 border border-slate-100 shadow-sm hover:shadow-2xl transition-transform hover:-translate-y-1 flex flex-col h-full min-h-[14rem]"
             >
               {brochure.heroImageUrl ? (
-                <div className="mb-4 overflow-hidden rounded-xl">
-                  <img src={brochure.heroImageUrl} alt={`${brochure.university} hero`} className="w-full h-36 object-cover" />
+                <div className="mb-3 overflow-hidden rounded-xl">
+                  <img src={brochure.heroImageUrl} alt={`${brochure.university} hero`} className="w-full h-24 md:h-36 object-cover" />
                 </div>
               ) : null}
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 bg-white border-2 border-[var(--brand)] shadow-sm">
-                  <img src={brochure.logoUrl || '/logo.jpg'} alt={`${brochure.university} logo`} className="w-10 h-10 object-contain" />
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center flex-shrink-0 bg-white border-2 border-[var(--brand)] shadow-sm">
+                  <img src={brochure.logoUrl || '/logo.jpg'} alt={`${brochure.university} logo`} className="w-8 h-8 md:w-10 md:h-10 object-contain" />
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-slate-900 mb-1 text-lg truncate">
+                  <h3 className="font-semibold text-slate-900 mb-1 text-base md:text-lg truncate">
                     {brochure.university}
                   </h3>
-                  <p className="text-sm text-slate-500 truncate">{brochure.program ?? 'MBA — Upskillers Counselling Support'}</p>
+                  <p className="text-xs md:text-sm text-slate-500 truncate">{brochure.program ?? 'MBA — Upskillers Counselling Support'}</p>
                 </div>
 
                 <div className="text-sm text-slate-400 opacity-80">{/* reserved */}</div>
               </div>
 
-              <div className="flex items-center gap-3 mb-6 text-sm text-slate-600">
-                <div className="inline-flex items-center gap-2 bg-slate-50 px-3 py-1 rounded-full text-[13px]">
+              <div className="flex items-center gap-2 mb-4 text-sm text-slate-600">
+                <div className="inline-flex items-center gap-2 bg-slate-50 px-2 py-1 rounded-full text-[12px]">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4 text-slate-400"><path fill="currentColor" d="M6 2h7l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM13 3.5V9h5.5L13 3.5z"/></svg>
                   <span className="font-semibold">PDF</span>
                 </div>
@@ -137,7 +137,7 @@ export default async function BrochureResources() {
                   href={`/brochure/${brochure.filename}`}
                   download
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-3 px-6 py-3 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-[#8b0f2e] to-[#6d0a22] shadow hover:brightness-95 transition-all"
+                  className="w-full inline-flex items-center justify-center gap-3 px-4 py-2 md:px-6 md:py-3 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-[#8b0f2e] to-[#6d0a22] shadow hover:brightness-95 transition-all"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4 fill-current opacity-90"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zM6 18h12v2H6z"/></svg>
                   <span>Download Brochure</span>

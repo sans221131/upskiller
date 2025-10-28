@@ -20,13 +20,14 @@ export default function Home() {
         <FeaturedPrograms />
       </section>
       <ProcessSteps />
+      <FAQ />
       <section id="reviews">
         <Reviews />
       </section>
       <section id="brochures">
         <BrochureResources />
       </section>
-  <FAQ />
+  
       <Footer />
     </div>
   );
