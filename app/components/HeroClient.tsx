@@ -123,18 +123,11 @@ export default function HeroClient({ programs }: Props) {
                               "linear-gradient(135deg, var(--brand), #65071f)",
                           }}
                         >
-                          <div className="min-h-[120px] md:min-h-[170px]">
+                          <div className="flex flex-col justify-center flex-grow">
                             <h4 className="text-xs md:text-sm uppercase font-semibold opacity-80">
                               {p.university}
                             </h4>
-                            <h3
-                              className="text-base md:text-2xl lg:text-3xl font-bold mt-2 leading-tight overflow-hidden"
-                              style={{
-                                display: "-webkit-box",
-                                WebkitLineClamp: 3,
-                                WebkitBoxOrient: "vertical",
-                              }}
-                            >
+                            <h3 className="text-base md:text-2xl lg:text-3xl font-bold mt-2 leading-tight whitespace-normal break-words">
                               {p.title}
                             </h3>
                             <div className="mt-2 text-sm opacity-90">
