@@ -75,7 +75,7 @@ export default function HeroClient({ programs }: Props) {
             </div>
 
             <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight">
-              Find your Online MBA across top Indian universities
+              Find your Online MBA across top Indian universities -- FUCK CHERRY
             </h1>
             <p className="text-base sm:text-xl text-slate-600 mb-4 sm:mb-8 leading-relaxed">
               Compare fees, specializations, mode, and eligibility. Get
