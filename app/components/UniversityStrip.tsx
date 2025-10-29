@@ -8,8 +8,6 @@ type InstRow = {
   name: string;
   slug?: string | null;
   logoUrl?: string | null;
-  accreditation?: string | null;
-  shortDescription?: string | null;
 };
 
 export default async function UniversityStrip() {
@@ -19,20 +17,16 @@ export default async function UniversityStrip() {
       name: institutions.name,
       slug: institutions.slug,
       logoUrl: institutions.logoUrl,
-      accreditation: institutions.accreditation,
-      shortDescription: institutions.shortDescription,
     })
     .from(institutions)
-  .orderBy(desc(institutions.createdAt))
-  .limit(8);
+    .orderBy(desc(institutions.createdAt))
+    .limit(8);
 
   const institutionsList: InstRow[] = rows.map((r: any) => ({
     id: r.id,
     name: r.name,
     slug: r.slug,
     logoUrl: r.logoUrl ?? r.heroImage ?? null,
-    accreditation: r.accreditation ?? null,
-    shortDescription: r.shortDescription ?? null,
   }));
 
   // Fetch program counts for these institutions (small, efficient server-side query)
@@ -51,13 +45,6 @@ export default async function UniversityStrip() {
     }, {});
   }
 
-  // Helper to pull a short NIRF label if present in shortDescription or accreditation
-  const extractNirf = (r: InstRow) => {
-    const text = (r.shortDescription || "" ) + " " + (r.accreditation || "");
-    const m = text.match(/(NIRF[^,.;]*)/i);
-    return m ? m[1].trim() : null;
-  };
-
   return (
     <section className="py-16 px-6 bg-slate-50">
       <div className="max-w-6xl mx-auto px-4">
@@ -69,38 +56,29 @@ export default async function UniversityStrip() {
         </div>
 
   <div className="mx-auto w-full max-w-6xl">
-          {/* make the auto-fit min width smaller so mobile shows 2 columns when space allows */}
-          {/* Force two columns on the smallest screens, then revert to auto-fit with a smaller min width on sm+ */}
-          <div className="grid grid-cols-2 sm:grid-cols-[repeat(auto-fit,_minmax(120px,_1fr))] gap-3 sm:gap-6 md:gap-8 lg:gap-10 justify-items-center">
+          {/* center a fixed-column inline-grid so 4 tiles sit centered on wide screens */}
+          <div className="flex justify-center">
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-6 md:gap-8 lg:gap-10">
           {institutionsList.map((uni) => (
             <a
               key={uni.id}
-              href={`/programs?university=${encodeURIComponent(uni.name)}`}
+              href={`/programs?university=${encodeURIComponent(uni.slug ?? String(uni.id))}`}
               aria-label={`View programs from ${uni.name}`}
-              // allow grid to size cards on very small screens; keep max width on sm+
-              className="flex flex-col items-center text-center p-3 sm:p-6 bg-white rounded-2xl border border-slate-200 hover:border-[rgba(138,13,40,0.12)] transition-shadow duration-150 hover:shadow-md w-full sm:max-w-[320px]"
+              className="flex flex-col justify-center items-center text-center p-4 bg-white rounded-lg border border-slate-200 hover:border-[rgba(138,13,40,0.12)] transition-shadow duration-150 hover:shadow-md w-[220px] h-56"
             >
-              <div className="w-full mb-4 rounded-lg bg-white flex items-center justify-center shadow-inner px-6 py-4">
-                {/* Make logos larger and cover width of the card area while preserving aspect ratio */}
-                <img src={uni.logoUrl || '/logo.jpg'} alt={`${uni.name} logo`} className="w-full max-h-12 sm:max-h-28 object-contain" />
+              <div className="w-full mb-3 rounded bg-white flex items-center justify-center px-4 py-2 h-20 sm:h-24">
+                <img src={uni.logoUrl || '/logo.jpg'} alt={`${uni.name} logo`} className="max-h-full object-contain" />
               </div>
 
-              <h3 className="text-xs sm:text-sm font-semibold text-slate-900 mb-2">{uni.name}</h3>
+              <h3 className="text-sm font-semibold text-slate-900 mb-1 px-2 leading-snug">{uni.name}</h3>
 
-              <div className="flex items-center gap-2 mb-2">
+              <div className="mt-1">
                 <span className="text-xs text-slate-500">{(programCounts[uni.id] || 0) + " program" + ((programCounts[uni.id] || 0) === 1 ? "" : "s")}</span>
-              </div>
-
-              <div className="flex flex-col gap-1 items-center">
-                {uni.accreditation ? (
-                  <span className="text-[10px] sm:text-[11px] font-semibold text-green-700 bg-green-50 px-2 py-0.5 rounded">{uni.accreditation.split(';')[0]}</span>
-                ) : null}
-                {extractNirf(uni) ? (
-                  <span className="text-[10px] sm:text-[11px] font-semibold text-sky-600 bg-sky-50 px-2 py-0.5 rounded">{extractNirf(uni)}</span>
-                ) : null}
               </div>
             </a>
           ))}
+            </div>
+          </div>
         </div>
 
         <div className="text-center mt-10">
@@ -108,7 +86,6 @@ export default async function UniversityStrip() {
             View all partner institutions
           </a>
         </div>
-      </div>
       </div>
     </section>
   );

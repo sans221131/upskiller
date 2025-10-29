@@ -59,12 +59,12 @@ export default async function BrochureResources() {
     },
   ];
 
-  // Server-side: fetch up to 3 institutions and render brochure-style cards for them.
-  // This ensures the brochure area shows the actual partner institutions from DB.
+  // Server-side: fetch up to 6 institutions and render brochure-style cards for them.
+  // Increase the limit so the brochure area shows up to 6 partner institutions.
   const rows = await db
     .select({ id: institutions.id, name: institutions.name, slug: institutions.slug, logo: institutions.logoUrl, heroImage: institutions.heroImage })
     .from(institutions)
-    .limit(3);
+    .limit(6);
 
   const matched = (rows as any[]).map((r: any) => {
     const slug = r.slug ?? (r.name || '').toLowerCase().replace(/\s+/g, '-');
