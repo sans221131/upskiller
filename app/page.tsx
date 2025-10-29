@@ -4,7 +4,6 @@ import UniversityStrip from './components/UniversityStrip';
 import FeaturedPrograms from './components/FeaturedPrograms';
 import ProcessSteps from './components/ProcessSteps';
 import Reviews from './components/Reviews';
-import BrochureResources from './components/BrochureResources';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 
@@ -23,9 +22,6 @@ export default function Home() {
       <FAQ />
       <section id="reviews">
         <Reviews />
-      </section>
-      <section id="brochures">
-        <BrochureResources />
       </section>
   
       <Footer />

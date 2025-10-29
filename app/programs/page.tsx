@@ -38,19 +38,18 @@ async function getPrograms(): Promise<ProgramSummary[]> {
 
   // Post-process accreditation to only include NAAC and any UGC-entitled mention
   const cleaned = (programList as any[]).map((r) => {
-    const acc =
-      (r.institutionAccreditation || "") +
-      " " +
-      (r.institutionShortDescription || "");
+    const acc = (r.institutionAccreditation || '') + ' ' + (r.institutionShortDescription || '');
 
     // capture NAAC token like 'NAAC A+' or 'NAAC - A+' up to punctuation
     const naacMatch = acc.match(/(NAAC[^,;:\)\(\.]*)/i);
     const naac = naacMatch ? naacMatch[1].trim() : null;
 
-    return {
-      ...r,
-      institutionAccreditation: naac || null,
-    };
+
+
+      return {
+        ...r,
+        institutionAccreditation: naac || null,
+      };
   });
 
   return cleaned as ProgramSummary[];
@@ -61,17 +60,10 @@ export const revalidate = 300;
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
 
-export default async function ProgramsPage({
-  searchParams,
-}: {
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
+export default async function ProgramsPage({ searchParams }: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const programs = await getPrograms();
-  const resolvedSearchParams = await searchParams;
-  const initialQuery =
-    typeof resolvedSearchParams?.university === "string"
-      ? resolvedSearchParams.university
-      : "";
+  const resolvedSearchParams = await (searchParams as Promise<Record<string, any>> | undefined);
+  const initialQuery = typeof resolvedSearchParams?.university === 'string' ? resolvedSearchParams.university : '';
 
   return (
     <div className="min-h-screen bg-white">
@@ -87,8 +79,7 @@ export default async function ProgramsPage({
             Find Your Perfect MBA Program
           </h1>
           <p className="text-xl text-slate-600 mb-12 max-w-3xl mx-auto">
-            Compare fees, specializations, and universities across India's top
-            online MBA programs
+            Compare fees, specializations, and universities across India's top online MBA programs
           </p>
 
           {/* CTA */}
@@ -97,8 +88,7 @@ export default async function ProgramsPage({
               Not Sure Where to Start?
             </h3>
             <p className="text-slate-600 mb-6">
-              Get personalized program recommendations based on your career
-              goals, budget, and eligibility
+              Get personalized program recommendations based on your career goals, budget, and eligibility
             </p>
             <a
               href="/lead-form"
