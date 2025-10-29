@@ -32,6 +32,9 @@ export default function Navigation() {
           <a href="#reviews" className="text-slate-600 hover:text-[var(--brand)] transition-colors">
             Reviews
           </a>
+          <a href="/about" className="text-slate-600 hover:text-[var(--brand)] transition-colors">
+            About
+          </a>
           <a href="#faq" className="text-slate-600 hover:text-[var(--brand)] transition-colors">
             FAQ
           </a>
@@ -75,6 +78,9 @@ export default function Navigation() {
             </a>
             <a href="#reviews" className="text-slate-600 hover:text-[var(--brand)] transition-colors font-medium">
               Reviews
+            </a>
+            <a href="/about" className="text-slate-600 hover:text-[var(--brand)] transition-colors font-medium">
+              About
             </a>
             <a href="#faq" className="text-slate-600 hover:text-[var(--brand)] transition-colors font-medium">
               FAQ

@@ -17,13 +17,14 @@ import React from "react";
 
 /**
  * ProcessSteps — premium “How we admit you” section
- * - Brand-first red: #8A0D28 (primary), #65071f (primaryDark)
+ * - Brand colours: CSS variables (teal) — use --brand and --brand-teal-light
  * - Arrow connectors between steps (no solid bar)
  * - Motion respects prefers-reduced-motion
  */
 export default function ProcessSteps() {
-  const primary = "#8A0D28";
-  const primaryDark = "#65071f";
+  // Use CSS variables for brand colours (teal) provided in globals.css
+  const primary = "var(--brand)";
+  const primaryDark = "var(--brand-teal-light)";
   const reduce = useReducedMotion();
 
   const stats = [
@@ -54,7 +55,7 @@ export default function ProcessSteps() {
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(60rem 40rem at 50% -10%, rgba(138,13,40,0.10), transparent 60%), radial-gradient(50rem 30rem at 10% 110%, rgba(101,7,31,0.08), transparent 60%)",
+        "radial-gradient(60rem 40rem at 50% -10%, rgba(46,124,116,0.10), transparent 60%), radial-gradient(50rem 30rem at 10% 110%, rgba(92,160,158,0.08), transparent 60%)",
         }}
       />
 
@@ -78,7 +79,7 @@ export default function ProcessSteps() {
           <div className="relative z-10">
             <div className="mx-auto mb-16 max-w-3xl text-center">
               <span className="inline-flex items-center gap-3 rounded-full px-8 py-4 text-sm font-semibold shadow-xl ring-1 ring-white/20" 
-                style={{ background: `linear-gradient(135deg, ${primary}15, ${primaryDark}10)`, color: primary }}>
+                style={{ background: `linear-gradient(135deg, rgba(46,124,116,0.15), rgba(92,160,158,0.10))`, color: primary }}>
                 <span className="h-2.5 w-2.5 rounded-full animate-pulse" style={{ background: primary }} />
                 Simple Process
               </span>
@@ -214,7 +215,7 @@ export default function ProcessSteps() {
               className="group relative inline-flex items-center justify-center rounded-full px-16 py-6 text-xl font-bold text-white shadow-2xl outline-none transition-all duration-300 hover:scale-105 focus-visible:ring-4 mb-8 overflow-hidden"
               style={{ 
                 background: `linear-gradient(135deg, ${primary}, ${primaryDark})`, 
-                boxShadow: `0 25px 50px -12px ${primary}66` 
+                boxShadow: `0 25px 50px -12px rgba(46,124,116,0.4)` 
               }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
@@ -345,13 +346,13 @@ function OfferLetter({ primary, primaryDark }: { primary: string; primaryDark: s
           {/* Enhanced main card */}
           <motion.div
             className="relative h-[28rem] w-[22rem] mx-auto rotate-1 rounded-3xl border-2 bg-gradient-to-b from-white via-white to-slate-50/80 p-8 shadow-2xl transition-all duration-500 group-hover:rotate-0 group-hover:scale-105"
-            style={{ 
-              borderColor: primary, 
-              boxShadow: `0 40px 80px -24px ${primary}66, 0 0 0 1px rgba(255,255,255,0.05)` 
-            }}
+                style={{ 
+                  borderColor: primary, 
+                  boxShadow: `0 40px 80px -24px rgba(46,124,116,0.4), 0 0 0 1px rgba(255,255,255,0.05)` 
+                }}
             aria-label="Sample Offer Letter"
             whileHover={{ 
-              boxShadow: `0 50px 100px -24px ${primary}80, 0 0 0 1px rgba(255,255,255,0.1)`,
+              boxShadow: `0 50px 100px -24px rgba(46,124,116,0.5), 0 0 0 1px rgba(255,255,255,0.1)`,
               y: -5
             }}
           >

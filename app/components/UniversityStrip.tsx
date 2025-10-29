@@ -62,9 +62,9 @@ export default async function UniversityStrip() {
           {institutionsList.map((uni) => (
             <a
               key={uni.id}
-              href={`/programs?university=${encodeURIComponent(uni.slug ?? String(uni.id))}`}
+              href={`/programs?institution=${encodeURIComponent(String(uni.id))}`}
               aria-label={`View programs from ${uni.name}`}
-              className="flex flex-col justify-center items-center text-center p-4 bg-white rounded-lg border border-slate-200 hover:border-[rgba(138,13,40,0.12)] transition-shadow duration-150 hover:shadow-md w-[220px] h-56"
+              className="flex flex-col justify-center items-center text-center p-4 bg-white rounded-lg border border-slate-200 hover:border-[rgba(46,124,116,0.12)] transition-shadow duration-150 hover:shadow-md w-[220px] h-56"
             >
               <div className="w-full mb-3 rounded bg-white flex items-center justify-center px-4 py-2 h-20 sm:h-24">
                 <img src={uni.logoUrl || '/logo.jpg'} alt={`${uni.name} logo`} className="max-h-full object-contain" />

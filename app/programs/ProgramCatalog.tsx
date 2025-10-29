@@ -1,6 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { getCloudinaryFetchUrl } from '../lib/cloudinary';
 
 type ProgramSummary = {
   id: number;
@@ -24,6 +26,7 @@ type Filters = {
   degreeType: string;
   deliveryMode: string;
   emi: string;
+  institution?: string | null;
 };
 
 const DEFAULT_FILTERS: Filters = {
@@ -31,6 +34,7 @@ const DEFAULT_FILTERS: Filters = {
   degreeType: 'all',
   deliveryMode: 'all',
   emi: 'all',
+  institution: null,
 };
 
 // highlights/outcomes parsing removed — cards no longer fetch or render the bullet list
@@ -149,7 +153,34 @@ export default function ProgramCatalog({ programs, initialQuery = '' }: { progra
 
     return {};
   }
+  const searchParams = useSearchParams();
+
   const [filters, setFilters] = useState<Filters>({ ...DEFAULT_FILTERS, query: initialQuery });
+
+  // If the URL contains ?institution=<id>, apply an institution filter
+  // without populating the text search box — this keeps the search input clean
+  // while still filtering precisely by institution id.
+  useEffect(() => {
+    try {
+      const inst = searchParams?.get('institution') ?? searchParams?.get('institutionId') ?? '';
+      if (!inst) {
+        // clear institution filter if param removed
+        setFilters((prev) => (prev.institution ? { ...prev, institution: null } : prev));
+        return;
+      }
+
+      // ensure it's a numeric id (string ok too)
+      const numeric = Number(inst);
+      if (Number.isNaN(numeric)) return;
+
+      setFilters((prev) => {
+        if (prev.institution === String(numeric)) return prev;
+        return { ...prev, institution: String(numeric) };
+      });
+    } catch (e) {
+      // ignore
+    }
+  }, [searchParams?.toString()]);
 
   const options = useMemo(() => {
     const degrees = new Set<string>();
@@ -172,6 +203,12 @@ export default function ProgramCatalog({ programs, initialQuery = '' }: { progra
 
   const filteredPrograms = useMemo(() => {
     return programs.filter((program) => {
+      // institution filter (exact match by id) — highest precedence
+      const matchesInstitution = filters.institution
+        ? program.institutionId === Number(filters.institution)
+        : true;
+
+      if (!matchesInstitution) return false;
       const matchesQuery = filters.query
         ? `${program.title} ${program.institutionName ?? ''}`
             .toLowerCase()
@@ -314,7 +351,7 @@ export default function ProgramCatalog({ programs, initialQuery = '' }: { progra
                     {assets.image ? (
                       <div className="mb-4 rounded-lg overflow-hidden shadow-sm">
                         <img
-                          src={assets.image}
+                          src={getCloudinaryFetchUrl(assets.image) ?? assets.image}
                           onError={(e) => {
                             const t = e.currentTarget as HTMLImageElement;
                             t.src = SVG_PLACEHOLDER;
@@ -329,7 +366,10 @@ export default function ProgramCatalog({ programs, initialQuery = '' }: { progra
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-lg flex items-center justify-center border">
                           <img
-                            src={assets.logo || `/logos/${(program.institutionName || '').toLowerCase().replace(/\s+/g, '')}.png`}
+                            src={
+                              (getCloudinaryFetchUrl(assets.logo) ?? assets.logo) ||
+                              `/logos/${(program.institutionName || '').toLowerCase().replace(/\s+/g, '')}.png`
+                            }
                             alt={`${program.institutionName} logo`}
                             className="w-6 h-6 md:w-8 md:h-8 object-contain"
                             onError={(e) => {

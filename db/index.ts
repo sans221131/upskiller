@@ -15,12 +15,26 @@ if (typeof globalThis.WebSocket === "undefined") {
 
 // Export a function to create a new pool for each request
 export function createDbPool() {
-  return new Pool({
-    connectionString: process.env.DATABASE_URL!,
-  });
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    throw new Error(
+      "No DATABASE_URL provided. Set DATABASE_URL in your environment or create a .env.local file with DATABASE_URL=your_connection_string"
+    );
+  }
+
+  return new Pool({ connectionString: url });
 }
 
-// Keep the HTTP driver for backward compatibility (if needed elsewhere)
-const sql = neon(process.env.DATABASE_URL!);
+// Initialize the HTTP driver in a guarded way so the error is explicit
+// when the environment variable is missing instead of failing with
+// a less helpful runtime stack during package scripts.
+const DATABASE_URL = process.env.DATABASE_URL;
+if (!DATABASE_URL) {
+  throw new Error(
+    "No database connection string was provided to neon(). Please set the DATABASE_URL environment variable (e.g. in .env.local) before running this command."
+  );
+}
+
+const sql = neon(DATABASE_URL);
 
 export const db = drizzle({ client: sql, logger: false, schema: schema });

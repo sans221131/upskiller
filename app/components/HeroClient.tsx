@@ -75,7 +75,7 @@ export default function HeroClient({ programs }: Props) {
             </div>
 
             <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight">
-              Find your Online MBA across top Indian universities -- FUCK CHERRY
+              Find your Online MBA across top Indian universities
             </h1>
             <p className="text-base sm:text-xl text-slate-600 mb-4 sm:mb-8 leading-relaxed">
               Compare fees, specializations, mode, and eligibility. Get
@@ -89,7 +89,7 @@ export default function HeroClient({ programs }: Props) {
                 style={{
                   backgroundColor: "var(--brand)",
                   color: "var(--brand-contrast)",
-                  boxShadow: "0 10px 30px rgba(138,13,40,0.12)",
+                  boxShadow: "0 10px 30px rgba(46,124,116,0.12)",
                 }}
               >
                 Browse Programs
@@ -120,7 +120,7 @@ export default function HeroClient({ programs }: Props) {
                           className="flex-1 rounded-2xl p-3 md:p-6 text-white shadow-lg flex flex-col justify-between h-full"
                           style={{
                             background:
-                              "linear-gradient(135deg, var(--brand), #65071f)",
+                              "linear-gradient(135deg, var(--brand), var(--brand-teal-light))",
                           }}
                         >
                           <div className="flex flex-col justify-center flex-grow">
@@ -259,7 +259,7 @@ export default function HeroClient({ programs }: Props) {
                     className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-100 shadow-md hover:bg-slate-50 focus:outline-none focus:ring-2"
                     style={{
                       color: "var(--brand)",
-                      ["--tw-ring-color" as any]: "rgba(138,13,40,0.25)",
+                      ["--tw-ring-color" as any]: "rgba(46,124,116,0.25)",
                     }}
                   >
                     <span className="text-lg font-bold">‹</span>
@@ -270,7 +270,7 @@ export default function HeroClient({ programs }: Props) {
                     className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-100 shadow-md hover:bg-slate-50 focus:outline-none focus:ring-2"
                     style={{
                       color: "var(--brand)",
-                      ["--tw-ring-color" as any]: "rgba(138,13,40,0.25)",
+                      ["--tw-ring-color" as any]: "rgba(46,124,116,0.25)",
                     }}
                   >
                     <span className="text-lg font-bold">›</span>
@@ -284,7 +284,7 @@ export default function HeroClient({ programs }: Props) {
                       aria-label={`Go to slide ${i + 1}`}
                       onClick={() => go(i)}
                       className="w-2 h-2 rounded-full"
-                      style={{
+                        style={{
                         backgroundColor:
                           i === current ? "var(--brand)" : "#e2e8f0",
                       }}

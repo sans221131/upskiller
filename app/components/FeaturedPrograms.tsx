@@ -1,6 +1,7 @@
 import { desc, eq, getTableColumns } from "drizzle-orm";
 import { db } from "@/db";
 import { programs as programsTable, institutions } from "@/db/schema";
+import { getCloudinaryFetchUrl } from "../lib/cloudinary";
 
 type ProgramItem = {
   id: number;
@@ -60,8 +61,8 @@ async function getFeaturedPrograms(): Promise<ProgramItem[]> {
     return {
       id: r.id,
       university: r.institutionName ?? "",
-      logoUrl: r.institutionLogo ?? r.heroImage ?? undefined,
-      imageUrl: r.heroImage ?? undefined,
+      logoUrl: getCloudinaryFetchUrl(r.institutionLogo ?? r.heroImage ?? undefined) ?? (r.institutionLogo ?? r.heroImage ?? undefined),
+      imageUrl: getCloudinaryFetchUrl(r.heroImage ?? undefined) ?? (r.heroImage ?? undefined),
       // extract only NAAC token (if present) from accreditation or shortDescription
       naac: (() => {
         const acc = (r.institutionAccreditation || '') + ' ' + (r.institutionShortDescription || '');
