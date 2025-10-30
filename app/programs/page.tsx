@@ -30,6 +30,8 @@ async function getPrograms(): Promise<ProgramSummary[]> {
       institutionSlug: institutions.slug,
       institutionLocation: institutions.location,
       institutionAccreditation: institutions.accreditation,
+      institutionLogo: institutions.logoUrl,
+      institutionHero: institutions.heroImage,
       institutionShortDescription: institutions.shortDescription,
     })
     .from(programsTable)

@@ -339,6 +339,25 @@ export default function ProgramCatalog({ programs, initialQuery = '' }: { progra
             const highlightPoints: string[] = [];
             const assets = findAssets(program.institutionName, program.institutionSlug);
 
+            // If the server provided richer image fields (like institutionLogo or heroImage)
+            // prefer those (and run them through Cloudinary fetch) — this mirrors
+            // the behavior in FeaturedPrograms which queries the DB directly.
+            const maybeInstitutionLogo = (program as any).institutionLogo ?? (program as any).logoUrl ?? (program as any).logo ?? undefined;
+            const maybeHeroImage = (program as any).heroImage ?? (program as any).imageUrl ?? undefined;
+
+            const imageSrc =
+              getCloudinaryFetchUrl(maybeHeroImage ?? assets.image ?? undefined) ??
+              maybeHeroImage ??
+              assets.image ??
+              undefined;
+
+            const logoSrc =
+              getCloudinaryFetchUrl(maybeInstitutionLogo ?? maybeHeroImage ?? assets.logo ?? undefined) ??
+              maybeInstitutionLogo ??
+              maybeHeroImage ??
+              assets.logo ??
+              `/logos/${(program.institutionName || '').toLowerCase().replace(/\s+/g, '')}.png`;
+
             return (
               <article
                 key={program.id}
@@ -348,10 +367,10 @@ export default function ProgramCatalog({ programs, initialQuery = '' }: { progra
                 <div className="flex flex-col justify-between pb-0 group-hover:pb-16 transition-all duration-200">
                   <div className="flex-1">
                     {/* derive image/logo paths from slug/name when available */}
-                    {assets.image ? (
+                    {imageSrc ? (
                       <div className="mb-4 rounded-lg overflow-hidden shadow-sm">
                         <img
-                          src={getCloudinaryFetchUrl(assets.image) ?? assets.image}
+                          src={imageSrc}
                           onError={(e) => {
                             const t = e.currentTarget as HTMLImageElement;
                             t.src = SVG_PLACEHOLDER;
@@ -366,10 +385,7 @@ export default function ProgramCatalog({ programs, initialQuery = '' }: { progra
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-lg flex items-center justify-center border">
                           <img
-                            src={
-                              (getCloudinaryFetchUrl(assets.logo) ?? assets.logo) ||
-                              `/logos/${(program.institutionName || '').toLowerCase().replace(/\s+/g, '')}.png`
-                            }
+                            src={logoSrc}
                             alt={`${program.institutionName} logo`}
                             className="w-6 h-6 md:w-8 md:h-8 object-contain"
                             onError={(e) => {
