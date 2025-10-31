@@ -71,11 +71,11 @@ export default async function ProgramDetailPage(props: any) {
           )}
 
           {/* Header */}
-          <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-slate-200">
-            <div className="flex flex-col lg:flex-row items-start gap-8">
-              <div className="flex items-start gap-6 flex-1">
-                <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center border-2 border-slate-100 shadow-sm">
-                  <img src={logoSrc} alt={program.institutionName} className="w-12 h-12 object-contain" />
+          <div className="bg-white rounded-3xl shadow-xl p-4 md:p-8 border border-slate-200">
+            <div className="flex flex-col lg:flex-row items-start gap-6">
+              <div className="flex items-start gap-4 flex-1">
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-2xl flex items-center justify-center border-2 border-slate-100 shadow-sm">
+                  <img src={logoSrc} alt={program.institutionName} className="w-10 h-10 md:w-12 md:h-12 object-contain" />
                 </div>
 
                 <div className="flex-1">
@@ -99,32 +99,32 @@ export default async function ProgramDetailPage(props: any) {
                   <p className="text-lg text-slate-600 mb-4">{program.institutionName}</p>
 
                   {/* Quick Stats */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="text-center p-3 bg-slate-50 rounded-xl">
-                      <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Mode</div>
-                      <div className="text-lg font-bold text-slate-900 capitalize">{program.deliveryMode ?? '—'}</div>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                    <div className="text-center p-2 md:p-3 bg-slate-50 rounded-xl">
+                      <div className="text-[11px] md:text-sm font-semibold text-slate-500 uppercase tracking-wider">Mode</div>
+                      <div className="text-base md:text-lg font-bold text-slate-900 capitalize">{program.deliveryMode ?? '—'}</div>
                     </div>
-                    <div className="text-center p-3 bg-slate-50 rounded-xl">
-                      <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Duration</div>
-                      <div className="text-lg font-bold text-slate-900">{program.durationMonths ? `${program.durationMonths} months` : '—'}</div>
+                    <div className="text-center p-2 md:p-3 bg-slate-50 rounded-xl">
+                      <div className="text-[11px] md:text-sm font-semibold text-slate-500 uppercase tracking-wider">Duration</div>
+                      <div className="text-base md:text-lg font-bold text-slate-900">{program.durationMonths ? `${program.durationMonths} months` : '—'}</div>
                     </div>
-                    <div className="text-center p-3 bg-slate-50 rounded-xl">
-                      <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Total Fee</div>
-                      <div className="text-lg font-bold" style={{ color: 'var(--brand)' }}>{program.totalFee ? `₹${program.totalFee.toLocaleString('en-IN')}` : 'Contact Us'}</div>
+                    <div className="text-center p-2 md:p-3 bg-slate-50 rounded-xl">
+                      <div className="text-[11px] md:text-sm font-semibold text-slate-500 uppercase tracking-wider">Total Fee</div>
+                      <div className="text-base md:text-lg font-bold" style={{ color: 'var(--brand)' }}>{program.totalFee ? `₹${program.totalFee.toLocaleString('en-IN')}` : 'Contact Us'}</div>
                     </div>
-                    <div className="text-center p-3 bg-slate-50 rounded-xl">
-                      <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">EMI from</div>
-                      <div className="text-lg font-bold text-green-600">{program.totalFee ? `₹${Math.round(program.totalFee / 24).toLocaleString('en-IN')}` : '—'}</div>
+                    <div className="text-center p-2 md:p-3 bg-slate-50 rounded-xl">
+                      <div className="text-[11px] md:text-sm font-semibold text-slate-500 uppercase tracking-wider">EMI from</div>
+                      <div className="text-base md:text-lg font-bold text-green-600">{program.totalFee ? `₹${Math.round(program.totalFee / 24).toLocaleString('en-IN')}` : '—'}</div>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* CTA Section */}
-              <div className="flex flex-col gap-3 lg:w-64">
+              <div className="flex flex-col gap-3 lg:w-64 w-full">
                 <a 
                   href={program.applyUrl ?? '/lead-form'} 
-                  className="px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg text-center"
+                  className="block w-full px-4 py-3 sm:px-8 sm:py-4 rounded-full text-base sm:text-lg font-semibold transition-all shadow-lg text-center"
                   style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-contrast)' }}
                 >
                   Apply Now
@@ -134,14 +134,14 @@ export default async function ProgramDetailPage(props: any) {
                     href={program.brochureUrl} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-sm text-center bg-white border-2 border-slate-200 text-slate-700 hover:border-slate-300"
+                    className="block w-full px-4 py-3 sm:px-8 sm:py-4 rounded-full text-base sm:text-lg font-semibold transition-all shadow-sm text-center bg-white border-2 border-slate-200 text-slate-700 hover:border-slate-300"
                   >
                     Download Brochure
                   </a>
                 )}
                 <a 
                   href="/lead-form" 
-                  className="px-8 py-3 rounded-full text-base font-semibold transition-all text-center"
+                  className="block w-full px-4 py-3 sm:px-8 sm:py-3 rounded-full text-base sm:text-lg font-semibold transition-all text-center"
                   style={{ backgroundColor: 'transparent', color: 'var(--brand)', border: '2px solid var(--brand)' }}
                 >
                   Get Free Counselling

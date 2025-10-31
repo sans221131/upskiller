@@ -131,7 +131,7 @@ export default async function FeaturedPrograms({ title, subtitle }: FeaturedProg
           {items.slice(0, 6).map((p, idx) => (
             <div key={idx} className={"group relative bg-white rounded-3xl border border-slate-100 p-3 md:p-6 shadow-sm overflow-hidden transition-all hover:shadow-lg flex flex-col h-full min-h-[14rem] pb-12 md:pb-0"}>
               {/* card content - no permanent bottom whitespace; padding added on hover */}
-              <div className="flex flex-col justify-between pb-0 group-hover:pb-16 transition-all duration-200">
+                <div className="flex flex-col justify-between pb-0 md:group-hover:pb-16 transition-all duration-200">
                 <div className="flex-1">
                 {/* Header: logo + accreditation chips */}
                 <div className="flex items-start justify-between mb-2">
@@ -183,7 +183,7 @@ export default async function FeaturedPrograms({ title, subtitle }: FeaturedProg
               </div>
 
               {/* absolute action bar slides up on hover */}
-              <div className="absolute left-4 right-4 bottom-4 z-20 opacity-0 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200">
+                <div className="absolute left-4 right-4 bottom-4 z-20 opacity-0 translate-y-4 pointer-events-none md:group-hover:opacity-100 md:group-hover:translate-y-0 md:group-hover:pointer-events-auto transition-all duration-200 hidden md:block">
                 <div className="flex items-center gap-4 pt-4 border-t border-slate-200 bg-white/90 backdrop-blur-sm rounded-b-2xl px-4 py-2">
                   <a
                     href={`/programs/${p.id}`}

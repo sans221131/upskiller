@@ -7,7 +7,8 @@ export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="border-b border-slate-200 bg-white/95 backdrop-blur-sm fixed w-full top-0 z-50 shadow-sm">
+    <>
+      <nav className="border-b border-slate-200 bg-white/95 backdrop-blur-sm fixed w-full top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
         {/* Logo */}
         <a href="/" className="flex items-center gap-3">
@@ -73,21 +74,24 @@ export default function Navigation() {
             <a href="/programs" className="text-slate-600 hover:text-[var(--brand)] transition-colors font-medium">
               Programs
             </a>
-            <a href="#universities" className="text-slate-600 hover:text-[var(--brand)] transition-colors font-medium">
+            <a href="/#universities" className="text-slate-600 hover:text-[var(--brand)] transition-colors font-medium">
               Universities
             </a>
-            <a href="#reviews" className="text-slate-600 hover:text-[var(--brand)] transition-colors font-medium">
+            <a href="/#reviews" className="text-slate-600 hover:text-[var(--brand)] transition-colors font-medium">
               Reviews
             </a>
             <a href="/about" className="text-slate-600 hover:text-[var(--brand)] transition-colors font-medium">
               About
             </a>
-            <a href="#faq" className="text-slate-600 hover:text-[var(--brand)] transition-colors font-medium">
+            <a href="/#faq" className="text-slate-600 hover:text-[var(--brand)] transition-colors font-medium">
               FAQ
             </a>
           </div>
         </div>
       )}
     </nav>
+      {/* mobile-only spacer to offset the fixed header so hero/content isn't hidden under it */}
+      <div className="md:hidden h-16" aria-hidden="true" />
+    </>
   );
 }

@@ -112,9 +112,8 @@ export default function StepPreferences({ data, updateData, onNext, onBack }: St
       <section className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h3 className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">
-            Areas you’re drawn to
+            Areas you’re drawn to <span className="inline text-rose-500">*</span>
           </h3>
-          <span className="text-xs font-medium uppercase tracking-[0.25em] text-slate-400">optional</span>
         </div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
           {SPECIALISATIONS.map((specialisation) => {
@@ -134,7 +133,7 @@ export default function StepPreferences({ data, updateData, onNext, onBack }: St
               </button>
             );
           })}
-        </div>
+  </div>
       </section>
 
       <section className="space-y-3">
@@ -157,7 +156,7 @@ export default function StepPreferences({ data, updateData, onNext, onBack }: St
         </p>
       </aside>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
+  <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
         <button
           type="button"
           onClick={onBack}
@@ -167,7 +166,8 @@ export default function StepPreferences({ data, updateData, onNext, onBack }: St
         </button>
         <button
           type="submit"
-          disabled={!data.degreeInterest || !data.preferredMode}
+          disabled={!data.degreeInterest || !data.preferredMode || !data.specialisationInterest}
+          aria-disabled={!data.degreeInterest || !data.preferredMode || !data.specialisationInterest}
           className="w-full rounded-full bg-[var(--brand)] px-6 py-4 text-lg font-semibold text-white shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           Continue to Eligibility

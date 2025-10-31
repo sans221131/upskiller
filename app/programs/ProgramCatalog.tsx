@@ -117,7 +117,7 @@ const SVG_PLACEHOLDER = `data:image/svg+xml;utf8,${encodeURIComponent(
   '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480"><rect width="100%" height="100%" fill="#f8fafc"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9ca3af" font-family="Arial, Helvetica, sans-serif" font-size="20">Image not available</text></svg>'
 )} `;
 
-export default function ProgramCatalog({ programs, initialQuery = '' }: { programs: ProgramSummary[]; initialQuery?: string }) {
+export default function ProgramCatalog({ programs, initialQuery = '', initialDegree = 'all' }: { programs: ProgramSummary[]; initialQuery?: string; initialDegree?: string }) {
   // Known filename mapping for public images/logos. Filenames in /public vary in
   // casing and extensions, so map common institution slugs/names to the exact
   // files we have in /public/uni and /public/logos.
@@ -155,7 +155,7 @@ export default function ProgramCatalog({ programs, initialQuery = '' }: { progra
   }
   const searchParams = useSearchParams();
 
-  const [filters, setFilters] = useState<Filters>({ ...DEFAULT_FILTERS, query: initialQuery });
+  const [filters, setFilters] = useState<Filters>({ ...DEFAULT_FILTERS, query: initialQuery, degreeType: initialDegree });
 
   // If the URL contains ?institution=<id>, apply an institution filter
   // without populating the text search box — this keeps the search input clean
