@@ -6,17 +6,17 @@ export default function Reviews() {
     {
       id: "r1",
       name: "Priya Sharma",
-      program: "MBA — Upskillers Counselling Support",
+      program: "Degree Program — Upskillers Counselling Support",
       university: "Upskillers",
       rating: 5,
-      text: "The Upskillers counsellor helped me shortlist the right MBA programs, refine my application, and prepare for the interview. Their personalised guidance got me admitted — could not have done it alone!",
+      text: "The Upskillers counsellor helped me shortlist the right degree programs, refine my application, and prepare for the interview. Their personalised guidance got me admitted — could not have done it alone!",
       videoThumb: "🎥",
       role: "Senior Analyst at TCS"
     },
     {
       id: "r2",
       name: "Rahul Verma",
-      program: "MBA — Upskillers Counselling Support",
+      program: "Degree Program — Upskillers Counselling Support",
       university: "Upskillers",
       rating: 5,
       text: "The counsellor worked with me on my resume, application essays and connected me with programs that matched my goals. I received multiple offers thanks to their timely support.",
@@ -26,7 +26,7 @@ export default function Reviews() {
     {
       id: "r3",
       name: "Sneha Patel",
-      program: "MBA — Upskillers Counselling Support",
+      program: "Degree Program — Upskillers Counselling Support",
       university: "Upskillers",
       rating: 4,
       text: "Upskillers' team helped me evaluate ROI and choose a specialization. They assisted with documentation and made the entire process smooth and affordable.",
@@ -36,7 +36,7 @@ export default function Reviews() {
     {
       id: "r4",
       name: "Amit Kumar",
-      program: "MBA — Upskillers Counselling Support",
+      program: "Degree Program — Upskillers Counselling Support",
       university: "Upskillers",
       rating: 5,
       text: "The personalised mentoring and application reviews were top-notch. My counsellor helped me highlight my experience effectively which led to a successful admission.",
@@ -46,7 +46,7 @@ export default function Reviews() {
     {
       id: "r5",
       name: "Divya Reddy",
-      program: "MBA — Upskillers Counselling Support",
+      program: "Degree Program — Upskillers Counselling Support",
       university: "Upskillers",
       rating: 4,
       text: "I appreciated the step-by-step checklist and mock interviews. The counsellor's feedback improved my confidence during interviews.",
@@ -56,7 +56,7 @@ export default function Reviews() {
     {
       id: "r6",
       name: "Karthik Iyer",
-      program: "MBA — Upskillers Counselling Support",
+      program: "Degree Program — Upskillers Counselling Support",
       university: "Upskillers",
       rating: 5,
       text: "The counsellor helped me target programs that fit my tech background and career goals. Their guidance shortened my application time and improved outcomes.",
@@ -67,7 +67,7 @@ export default function Reviews() {
     {
       id: "r7",
       name: "Neha Kapoor",
-      program: "MBA — Upskillers Counselling Support",
+      program: "Degree Program — Upskillers Counselling Support",
       university: "Upskillers",
       rating: 5,
       text: "My counsellor helped me frame my achievements into a compelling story. I got an interview invite within weeks and an admission soon after.",
@@ -77,7 +77,7 @@ export default function Reviews() {
     {
       id: "r8",
       name: "Sandeep Rao",
-      program: "MBA — Upskillers Counselling Support",
+      program: "Degree Program — Upskillers Counselling Support",
       university: "Upskillers",
       rating: 4,
       text: "The application timeline and document checklist saved me a lot of stress. Their mock interviews were particularly helpful.",
@@ -87,7 +87,7 @@ export default function Reviews() {
     {
       id: "r9",
       name: "Meera Joshi",
-      program: "MBA — Upskillers Counselling Support",
+      program: "Degree Program — Upskillers Counselling Support",
       university: "Upskillers",
       rating: 5,
       text: "I appreciated the personalised school-fit recommendations and the essay feedback. The counsellor truly understood my profile and goals.",
@@ -97,7 +97,7 @@ export default function Reviews() {
     {
       id: "r10",
       name: "Vikram Singh",
-      program: "MBA — Upskillers Counselling Support",
+      program: "Degree Program — Upskillers Counselling Support",
       university: "Upskillers",
       rating: 5,
       text: "Their stepwise approach and timely follow-ups made the whole process manageable alongside my full-time job.",
@@ -107,7 +107,7 @@ export default function Reviews() {
     {
       id: "r11",
       name: "Aisha Khan",
-      program: "MBA — Upskillers Counselling Support",
+      program: "Degree Program — Upskillers Counselling Support",
       university: "Upskillers",
       rating: 4,
       text: "The career counselling sessions helped me choose the right specialization and target the programs best aligned with my goals.",
@@ -117,7 +117,7 @@ export default function Reviews() {
     {
       id: "r12",
       name: "Rohit Desai",
-      program: "MBA — Upskillers Counselling Support",
+      program: "Degree Program — Upskillers Counselling Support",
       university: "Upskillers",
       rating: 5,
       text: "From shortlisting to final submission, the counsellor's guidance was practical and focused. I felt supported at every step.",

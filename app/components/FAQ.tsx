@@ -10,11 +10,11 @@ export default function FAQ() {
   const faqCategories = {
     "Admissions": [
       {
-        question: "What are the eligibility criteria for MBA programs?",
-        answer: "Most programs require a bachelor's degree (any stream) with minimum 50% marks. Some programs may require work experience. Specific eligibility varies by university."
+        question: "What are the eligibility criteria for degree programs?",
+        answer: "Most programs require previous educational qualifications appropriate to the level (e.g., 10+2 for bachelor's, bachelor's degree for master's). Minimum marks typically range from 45-50%. Specific eligibility varies by university and program."
       },
       {
-        question: "How do I apply for an MBA program?",
+        question: "How do I apply for a degree program?",
         answer: "Fill out our online application form, speak with a counselor, submit required documents, and complete the admission process. The entire process typically takes 3-5 business days."
       },
       {
@@ -28,8 +28,8 @@ export default function FAQ() {
     ],
     "Fees & EMI": [
       {
-        question: "What is the fee structure for online MBA programs?",
-        answer: "Fees range from ₹60,000 to ₹3,50,000 depending on the university and specialization. Detailed fee breakdown is available in program brochures and during counseling."
+        question: "What is the fee structure for online degree programs?",
+        answer: "Fees vary by degree level and university, typically ranging from ₹30,000 to ₹3,50,000 depending on the program and specialization. Detailed fee breakdown is available in program brochures and during counseling."
       },
       {
         question: "Are EMI options available?",
@@ -46,7 +46,7 @@ export default function FAQ() {
     ],
     "Curriculum & Exams": [
       {
-        question: "How is the online MBA delivered?",
+        question: "How are online degree programs delivered?",
         answer: "Programs combine recorded video lectures, live sessions, case studies, assignments, and projects. You get 24/7 access to the learning management system (LMS)."
       },
       {
@@ -64,15 +64,15 @@ export default function FAQ() {
     ],
     "Placements": [
       {
-        question: "Do online MBAs offer placement assistance?",
-        answer: "Most universities provide career support including resume building, interview prep, and job portal access. Placement guarantees vary by institution."
+        question: "Do online degree programs offer placement assistance?",
+        answer: "Most universities provide career support including resume building, interview prep, and job portal access. Placement guarantees vary by institution and program level."
       },
       {
-        question: "What is the average salary after online MBA?",
-        answer: "Salary depends on your prior experience, specialization, and industry. On average, professionals see 30-50% salary hikes within 1-2 years of completing their MBA."
+        question: "What is the average salary after completing an online degree?",
+        answer: "Salary depends on your degree level, specialization, prior experience, and industry. Many professionals see significant career growth and salary improvements within 1-2 years of completing their degree."
       },
       {
-        question: "Are online MBA graduates hired by top companies?",
+        question: "Are online degree graduates hired by top companies?",
         answer: "Yes! Graduates work at companies like TCS, Infosys, Wipro, HDFC, Amazon, and more. The degree quality and your skills matter more than the mode of study."
       }
     ],
@@ -133,7 +133,7 @@ export default function FAQ() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-3">Smart FAQ</h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">Find answers to common questions about MBA programs, admissions, and more — or search to jump straight to the answer.</p>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">Find answers to common questions about degree programs, admissions, and more — or search to jump straight to the answer.</p>
         </div>
 
         <div className="grid md:grid-cols-4 gap-8 items-start">

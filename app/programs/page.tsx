@@ -82,13 +82,13 @@ export default async function ProgramsPage({ searchParams }: { searchParams?: Pr
       <section className="pt-20 md:pt-32 pb-12 px-4 sm:px-6 bg-gradient-to-b from-[var(--brand)]/5 to-white">
         <div className="max-w-7xl mx-auto text-center">
           <div className="inline-block mb-3 px-3 py-1.5 bg-[var(--brand)]/10 text-[var(--brand)] rounded-full text-xs sm:text-sm font-semibold">
-            {programs.length}+ MBA Programs Available
+            {programs.length}+ Degree Programs Available
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-slate-900 mb-4 sm:mb-6">
-            Find Your Perfect MBA Program
+            Find Your Perfect Degree Program
           </h1>
           <p className="text-sm sm:text-base md:text-xl text-slate-600 mb-8 sm:mb-12 max-w-3xl mx-auto">
-            Compare fees, specializations, and universities across India's top online MBA programs
+            Compare fees, specializations, and universities across India's top online degree programs
           </p>
 
           {/* CTA */}
@@ -114,7 +114,7 @@ export default async function ProgramsPage({ searchParams }: { searchParams?: Pr
         <div className="max-w-7xl mx-auto">
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-slate-900 mb-2">
-              All MBA Programs
+              All Degree Programs
             </h2>
             <p className="text-slate-600">
               Use filters below to narrow down your options

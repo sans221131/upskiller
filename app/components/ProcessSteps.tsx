@@ -224,7 +224,7 @@ export default function ProcessSteps() {
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               
               <span className="relative flex items-center gap-3">
-                Start Your University Application
+                Start Your Degree Journey
                 <motion.span 
                   className="text-2xl"
                   animate={{ x: [0, 4, 0] }}

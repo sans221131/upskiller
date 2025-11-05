@@ -37,7 +37,7 @@ export default function FinalCTA() {
             </div>
 
             <h2 className="text-2xl md:text-3xl font-extrabold leading-snug text-white mb-2">Talk to a Counsellor Today</h2>
-            <p className="text-slate-200 text-sm md:text-base max-w-lg">Expert guidance to choose the right MBA program — short consultation, personalized recommendations, and straightforward EMI options.</p>
+            <p className="text-slate-200 text-sm md:text-base max-w-lg">Expert guidance to choose the right degree program — short consultation, personalized recommendations, and straightforward EMI options.</p>
           </div>
         </div>
 

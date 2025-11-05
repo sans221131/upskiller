@@ -140,7 +140,7 @@ export default async function Footer() {
               <span className="text-xl font-bold">Upskillers</span>
             </div>
             <p className="text-slate-400 text-sm mb-4">
-              Your trusted partner for finding the perfect online MBA program from
+              Your trusted partner for finding the perfect degree program from
               India&apos;s top universities.
             </p>
             <div className="flex gap-3">
@@ -326,7 +326,7 @@ export default async function Footer() {
             </ul>
             <div className="space-y-2 text-sm text-slate-400">
               <div className="flex items-center gap-2">
-                <span className="font-medium">upskillersmba@gmail.com</span>
+                <span className="font-medium">info@upskillers.com</span>
               </div>
               <div className="flex flex-col gap-2">
                 <a href="tel:+919769870405" className="font-medium hover:underline">

@@ -2,8 +2,8 @@ import Image from "next/image";
 import LeadFormWizard from '../components/LeadFormWizard';
 
 export const metadata = {
-  title: 'Get MBA Counselling - Upskillers',
-  description: 'Answer a few questions and get personalized MBA program recommendations from our expert counselors.',
+  title: 'Get Degree Counselling - Upskillers',
+  description: 'Answer a few questions and get personalized degree program recommendations from our expert counselors.',
 };
 
 export default function LeadFormPage() {

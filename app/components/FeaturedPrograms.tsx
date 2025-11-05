@@ -123,7 +123,7 @@ export default async function FeaturedPrograms({ title, subtitle }: FeaturedProg
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">{title ?? 'Most trusted Online Higher Education'}</h2>
-          <p className="text-lg text-slate-600">{subtitle ?? 'Handpicked MBA programs from trusted universities'}</p>
+          <p className="text-lg text-slate-600">{subtitle ?? 'Handpicked degree programs from trusted universities'}</p>
         </div>
 
   {/* Mobile: show two cards per row for a denser grid; keep md+ layout unchanged */}
