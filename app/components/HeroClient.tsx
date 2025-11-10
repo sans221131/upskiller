@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { IconExternalLink } from "@tabler/icons-react";
 
 export type ProgramCard = {
   id: string | number;
@@ -134,15 +135,6 @@ export default function HeroClient({ programs }: Props) {
                               {p.mode ? capitalize(p.mode) : '—'} {p.duration ? `• ${p.duration}` : ""}
                             </div>
                           </div>
-
-                          <div className="mt-3">
-                            <div className="text-sm md:text-base font-semibold">
-                              {p.fee}
-                              <span className="text-xs md:text-sm font-medium opacity-80 ml-2">
-                                {p.emi ? `(${p.emi})` : ""}
-                              </span>
-                            </div>
-                          </div>
                         </div>
 
                         {/* Meta / Actions */}
@@ -175,34 +167,10 @@ export default function HeroClient({ programs }: Props) {
                               </div>
                               <div className="bg-slate-50 rounded-lg p-2.5">
                                 <dt className="text-[11px] text-slate-500">
-                                  Mode
-                                </dt>
-                                <dd className="text-sm font-semibold text-slate-900 truncate">
-                                  {p.mode ? capitalize(p.mode) : "—"}
-                                </dd>
-                              </div>
-                              <div className="bg-slate-50 rounded-lg p-2.5">
-                                <dt className="text-[11px] text-slate-500">
                                   Total fee
                                 </dt>
                                 <dd className="text-sm font-semibold text-slate-900 truncate">
                                   {p.fee ?? "—"}
-                                </dd>
-                              </div>
-                              <div className="bg-slate-50 rounded-lg p-2.5">
-                                <dt className="text-[11px] text-slate-500">
-                                  EMI
-                                </dt>
-                                <dd className="text-sm font-semibold text-slate-900 truncate">
-                                  {p.emi ?? "—"}
-                                </dd>
-                              </div>
-                              <div className="bg-slate-50 rounded-lg p-2.5">
-                                <dt className="text-[11px] text-slate-500">
-                                  Apply by
-                                </dt>
-                                <dd className="text-sm font-semibold text-slate-900 truncate">
-                                  {formatDate(p.applicationDeadline)}
                                 </dd>
                               </div>
                               <div className="bg-slate-50 rounded-lg p-2.5 col-span-2">
@@ -223,25 +191,15 @@ export default function HeroClient({ programs }: Props) {
                           <div className="mt-3 flex flex-col sm:flex-row gap-2 items-stretch">
                             <button
                               onClick={() => router.push(`/programs/${p.id}`)}
-                              className="flex-1 text-center px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold flex items-center justify-center shadow-md transition-all"
+                              className="flex-1 text-center px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-md transition-all"
                               style={{
                                 backgroundColor: "var(--brand)",
                                 color: "var(--brand-contrast)",
                               }}
                             >
                               View Program
+                              <IconExternalLink className="w-4 h-4" aria-hidden="true" />
                             </button>
-
-                            <a
-                              href={p.brochureUrl || "#"}
-                              className="flex-1 bg-white text-center px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold flex items-center justify-center shadow-sm transition-all"
-                              style={{
-                                border: "1px solid var(--brand)",
-                                color: "var(--brand)",
-                              }}
-                            >
-                              Download
-                            </a>
                           </div>
                         </div>
                       </div>

@@ -139,8 +139,8 @@ export default function Reviews() {
     setShuffledReviews(copy);
   }, []);
 
-  // Display only 6 reviews at a time, chosen from the shuffled pool of 12
-  const displayedReviews = shuffledReviews.slice(0, 6);
+  // Display only 3 reviews at a time, chosen from the shuffled pool of 12
+  const displayedReviews = shuffledReviews.slice(0, 3);
 
   return (
     <section className="py-20 px-6 bg-slate-50">
@@ -156,8 +156,8 @@ export default function Reviews() {
 
         {/* Filter removed — reviews show Upskillers counselling testimonials */}
 
-  {/* Reviews grid: two columns on the smallest screens for a denser mobile layout */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Reviews: responsive layout - single column on mobile, side by side on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           {displayedReviews.map((review) => (
             <div
               key={review.id}
@@ -194,14 +194,6 @@ export default function Reviews() {
                 <div>
                   <h4 className="font-semibold text-sm text-slate-900">{review.name}</h4>
                   <p className="text-xs text-slate-600">{review.role}</p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    <span className="text-[10px] font-semibold text-[var(--brand)] bg-[var(--brand)]/10 px-2 py-1 rounded-full">
-                      {review.program}
-                    </span>
-                    <span className="text-[10px] font-semibold text-green-700 bg-green-50 px-2 py-1 rounded-full">
-                      {review.university}
-                    </span>
-                  </div>
                 </div>
               </div>
             </div>

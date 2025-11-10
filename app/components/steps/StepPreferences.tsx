@@ -33,6 +33,7 @@ const SPECIALISATIONS = [
   'Entrepreneurship',
   'Supply Chain',
   'International Business',
+  'Business Management',
   'Not sure yet',
 ] as const;
 

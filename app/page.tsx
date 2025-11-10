@@ -18,7 +18,7 @@ export default function Home() {
       <section id="featured">
         <FeaturedPrograms />
       </section>
-      <ProcessSteps />
+      {/* <ProcessSteps /> */}
       <FAQ />
       <section id="reviews">
         <Reviews />
