@@ -48,10 +48,10 @@ export default function FounderCarousel({
   const currentImg = images[index] ?? images[0] ?? "";
 
   return (
-    <div className="w-full rounded-2xl bg-slate-50 ring-1 ring-slate-200/70 shadow-sm overflow-hidden">
-      {/* main image / banner */}
+    <div className="w-full rounded-2xl bg-white ring-1 ring-slate-200/70 shadow-sm overflow-hidden">
+      {/* main image - larger size */}
       <div
-        className="relative w-full aspect-[4/3] bg-slate-200"
+        className="relative w-full aspect-[3/4] bg-slate-200"
         onMouseEnter={() => (paused.current = true)}
         onMouseLeave={() => (paused.current = false)}
       >
@@ -60,33 +60,50 @@ export default function FounderCarousel({
             src={currentImg}
             alt={`${name} photo ${index + 1}`}
             fill
-            className="object-cover object-top"
-            sizes="320px"
+            className="object-cover object-top transition-opacity duration-500"
+            sizes="(max-width: 640px) 100vw, 400px"
+            priority={index === 0}
           />
         )}
 
-        {/* gradient + text overlay */}
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent text-white p-4">
-          <div className="text-sm font-semibold leading-tight">
-            {name}
-            {role ? (
-              <span className="block text-[11px] font-normal text-white/80">
-                {role}
-              </span>
-            ) : null}
+        {/* image indicators */}
+        {images.length > 1 && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setIndex(i)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === index
+                    ? "w-6 bg-white"
+                    : "w-1.5 bg-white/50 hover:bg-white/75"
+                }`}
+                aria-label={`Go to image ${i + 1}`}
+              />
+            ))}
           </div>
+        )}
+      </div>
 
-          {quote && (
-            <blockquote className="mt-2 text-[12px] leading-relaxed text-white/90">
-              {quote}
-            </blockquote>
+      {/* separate text box below image */}
+      <div className="p-5 space-y-3">
+        <div>
+          <div className="text-base font-semibold text-slate-900 leading-tight">
+            {name}
+          </div>
+          {role && (
+            <div className="mt-1 text-sm font-normal text-slate-600">
+              {role}
+            </div>
           )}
         </div>
 
-        {/* no indicators shown - autoplay only per request */}
+        {quote && (
+          <blockquote className="text-sm leading-relaxed text-slate-700 italic border-l-2 border-[var(--brand)] pl-3">
+            {quote}
+          </blockquote>
+        )}
       </div>
-
-      {/* thumbnails removed — images autoplay silently */}
     </div>
   );
 }

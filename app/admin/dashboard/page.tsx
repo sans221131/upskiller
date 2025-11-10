@@ -1235,6 +1235,15 @@ export default function AdminDashboard() {
 
               <div>
                 <label className="block text-sm font-medium text-slate-700">Highlights</label>
+                <p className="mt-1 text-xs text-slate-500">
+                  Start with one summary sentence, then list structured facts as Label: Value pairs. Skip any lines that do not apply.
+                </p>
+                <p className="mt-1 text-xs text-slate-400">
+                  Example:<br />
+                  Program Overview snapshot<br />
+                  Credits: 81<br />
+                  Learning Mode: LMS with live and recorded classes
+                </p>
                 <textarea value={programForm.highlights || ''} onChange={(e) => setProgramForm(f => ({ ...f, highlights: e.target.value }))} className="mt-1 w-full px-3 py-2 border rounded-lg text-slate-900" rows={3} />
               </div>
 

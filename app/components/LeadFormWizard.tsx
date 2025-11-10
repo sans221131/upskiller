@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { QuickConnectForm } from "./QuickConnectForm";
 import StepProfile from "./steps/StepProfile";
 import StepPreferences from "./steps/StepPreferences";
 import StepEligibility from "./steps/StepEligibility";
@@ -183,6 +184,7 @@ export default function LeadFormWizard() {
   return (
     <div className="relative min-h-screen bg-slate-50 py-12 px-4">
       <div className="mx-auto max-w-6xl space-y-8">
+        <QuickConnectForm />
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-md">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
@@ -199,15 +201,15 @@ export default function LeadFormWizard() {
                 const isComplete = index < currentStep;
                 return (
                   <div key={step.key} className="flex flex-col gap-1 text-left">
-                        <div
-                          className={`inline-flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
-                            isActive
-                              ? "bg-[var(--brand)] text-white shadow"
-                              : isComplete
-                              ? "bg-[var(--brand)]/10 text-[var(--brand)]"
-                              : "bg-slate-100 text-slate-500"
-                          }`}
-                        >
+                    <div
+                      className={`inline-flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
+                        isActive
+                          ? "bg-[var(--brand)] text-white shadow"
+                          : isComplete
+                          ? "bg-[var(--brand)]/10 text-[var(--brand)]"
+                          : "bg-slate-100 text-slate-500"
+                      }`}
+                    >
                       {index + 1}
                     </div>
                     <span
