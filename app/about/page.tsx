@@ -246,7 +246,7 @@ export default function AboutPage() {
                   className="absolute inset-0 h-full w-full"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.7909091408693!2d72.552!3d23.0309!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e84fb5e9c9b6f%3A0x0000000000000000!2sGulbai%20Tekra%2C%20Ahmedabad%2C%20Gujarat%20380006!5e0!3m2!1sen!2sin!4v0000000000000"
+                  src="https://www.google.com/maps?q=3%2F304-Shivalik%209%2C%20Gulbai%20Tekra%20Rd%2C%20Gangotri%20Society%2C%20Gulbai%20Tekra%2C%20Ahmedabad%2C%20Gujarat%20380006&z=18&hl=en&output=embed"
                 />
               </div>
               <div className="border-t border-slate-200 px-5 py-3 text-[11px] leading-relaxed text-slate-500">
